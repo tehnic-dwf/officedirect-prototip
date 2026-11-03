@@ -140,8 +140,8 @@ ul, ol { padding: 0; list-style: none; }
 .search__input:focus { outline: none; }
 .search__input::placeholder { color: var(--ink-3); }
 .search__input::-webkit-search-cancel-button { display: none; }
-.search__clear { position: absolute; right: 48px; top: 0; width: 40px; height: 48px; display: grid; place-items: center; border: 0; background: none; color: var(--ink-2); cursor: pointer; }
-.search__input:not(:placeholder-shown) { padding-right: 40px; }
+.search__clear { position: absolute; right: 48px; top: 0; width: 44px; height: 48px; display: grid; place-items: center; border: 0; background: none; color: var(--ink-2); cursor: pointer; }
+.search__input:not(:placeholder-shown) { padding-right: 44px; }
 .search__go { display: grid; place-items: center; width: 48px; height: 48px; border: 0; border-radius: 0 var(--r-ctl) var(--r-ctl) 0; background: var(--primary); color: var(--ink); cursor: pointer; transition: background-color .2s var(--ease); }
 .search__go:hover { background: var(--primary-hover); }
 .search__go .ph { font-size: 20px; }
@@ -418,6 +418,11 @@ html:not(.hv-a) [data-hero="a"], html:not(.hv-b) [data-hero="b"], html:not(.hv-c
 /* Atributele se văd întregi, pe cel mult două rânduri; subgrid-ul aliniază rândurile între carduri */
 .card__meta { margin-top: 4px; text-wrap: balance; font-size: 14px; line-height: 1.35; color: var(--ink-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card__name a { text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* Tot cardul duce la produs: numele are doar 20-40 px înălțime, așa că ținta de atingere e cardul întreg (M.148).
+   Butoanele (coș, culoare, prag) stau deasupra și rămân separate */
+.card__name a::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-card); }
+.card .buy, .card .card__extra { position: relative; z-index: 1; }
+.card:has(.card__name a:active) .card__img img { transform: scale(.96); }
 .card__extra { min-width: 0; }
 .card__meta .nw { white-space: nowrap; }
 .card__extra > p { display: flex; align-items: center; gap: 5px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -589,10 +594,10 @@ img.is-loading { opacity: 0; }
 .foot__head { margin-bottom: 2px; font-size: 14px; font-weight: 600; letter-spacing: .02em; color: #BBAECB; }
 .foot__nav > div:last-child { grid-column: 1 / -1; }
 .foot__nav > div:last-child ul { display: flex; flex-wrap: wrap; gap: 0 24px; }
-.foot__nav a { display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #fff; text-decoration: none; }
+.foot__nav a { display: flex; align-items: center; min-height: 44px; min-width: 44px; font-size: 16px; color: #fff; text-decoration: none; }
 .foot__legal { margin-top: 32px; padding-top: 16px; border-top: 1px solid rgb(255 255 255 / .12); }
 .foot__links { display: flex; flex-wrap: wrap; gap: 0 18px; }
-.foot__links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--on-dark); text-underline-offset: 4px; text-decoration-color: rgb(255 255 255 / .3); }
+.foot__links a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-size: 14px; color: var(--on-dark); text-underline-offset: 4px; text-decoration-color: rgb(255 255 255 / .3); }
 .foot__company { margin-top: 8px; font-size: 14px; line-height: 1.5; color: #BBAECB; }
 
 /* ---------- Toast, zbor spre coș ---------- */
@@ -653,6 +658,8 @@ img.is-loading { opacity: 0; }
 .vsheet-hint { margin-top: 8px; }
 .vcta { margin-top: 12px; }
 .vcta[aria-disabled="true"] { opacity: .5; }
+/* Butonul spune mereu „Adaugă în coș” (aceeași etichetă peste tot, M.134); fără culoare, nota explică de ce nu merge încă */
+.vcta-note { margin-top: 8px; font-size: 14px; text-align: center; color: var(--ink-2); }
 
 .cart-line { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .cart-line img { width: 56px; height: 56px; object-fit: contain; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--line); }

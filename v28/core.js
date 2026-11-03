@@ -590,7 +590,8 @@ function renderVariant() {
       <p class="vtotal">Total ${vatLabel()}<b>${lei(round2(vatPrice(u) * v.qty))}</b></p>
     </div>
     ${p.tiers ? `<div class="vsheet-hint">${(() => { const q = qtyOf(v.id) + v.qty; const next = p.tiers.find(([m]) => q < m); return next ? `<p class="hint">De la ${next[0]} buc.: ${pLei(next[1])}/buc.</p>` : `<p class="hint is-on">Cel mai bun preț: ${pLei(u)}/buc.</p>`; })()}</div>` : ''}
-    <button class="btn btn--primary btn--block vcta" type="button" data-vadd aria-disabled="${!v.color}">${v.color ? `Adaugă în coș · ${lei(round2(vatPrice(u) * v.qty))}` : 'Alege o culoare'}</button>
+    <button class="btn btn--primary btn--block vcta" type="button" data-vadd aria-disabled="${!v.color}"${v.color ? "" : " aria-describedby=\"vcta-note\""}>${v.color ? `Adaugă în coș · ${lei(round2(vatPrice(u) * v.qty))}` : 'Adaugă în coș'}</button>
+    ${v.color ? '' : '<p class="vcta-note" id="vcta-note">Alege o culoare ca să adaugi în coș.</p>'}
     </div>`;
 }
 $('#variant-body').addEventListener('click', e => {

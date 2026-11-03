@@ -11,13 +11,11 @@
 .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; font-size: 14px; color: var(--ink-3); }
 .crumbs li { display: inline-flex; align-items: center; gap: 6px; }
 .crumbs li + li::before { content: ""; width: 5px; height: 5px; border-top: 1.5px solid var(--ink-3); border-right: 1.5px solid var(--ink-3); transform: rotate(45deg); }
-.crumbs a { display: inline-flex; align-items: center; min-height: 32px; color: var(--secondary); text-decoration: none; }
+.crumbs a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: var(--secondary); text-decoration: none; }
 .crumbs [aria-current] { color: var(--ink-2); }
 
 /* ---------- Titlu și număr ---------- */
 .plp__head { padding: 4px var(--gutter) 0; }
-.plp__meta { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin-top: 2px; }
-.plp__meta .plp__count { margin-top: 0; }
 .plp__title { font-size: 28px; line-height: 1.1; font-weight: 650; letter-spacing: -.03em; }
 .plp__count { margin-top: 2px; font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 
@@ -32,7 +30,7 @@
 .intents::-webkit-scrollbar { display: none; }
 .intents li { flex: none; }
 .intents li:last-child { padding-right: 24px; }
-.intent { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--mist); color: var(--ink); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color .2s var(--ease), transform .2s var(--ease); }
+.intent { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--mist); color: var(--ink); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color .2s var(--ease), transform .2s var(--ease); }
 .intent:active { transform: scale(.97); }
 .intent__n { font-size: 13px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .intents[hidden] { display: none; }
@@ -53,9 +51,9 @@
 .active__list li:last-child { padding-right: 24px; }
 .active__list::-webkit-scrollbar { display: none; }
 .active__list li { flex: none; }
-.achip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px 0 12px; border: 0; border-radius: 999px; background: var(--secondary-tint); color: var(--secondary-900); font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.achip { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px 0 12px; border: 0; border-radius: 999px; background: var(--secondary-tint); color: var(--secondary-900); font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
 .achip .ph { font-size: 14px; }
-.achip--clear { min-height: 36px; font-size: 14px; }
+.achip--clear { min-height: 44px; font-size: 14px; }
 
 /* ---------- Grila: două coloane, rândurile cardurilor aliniate (subgrid) ---------- */
 .plp__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 32px; margin-top: 16px; padding: 0 var(--gutter); }

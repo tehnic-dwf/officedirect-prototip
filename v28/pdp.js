@@ -336,7 +336,6 @@ const buyBar = $('#pdp-bar');
 function updateBar() {
   if (out) return;
   $('#pdp-bar-price').innerHTML = `<b>${lei(round2(qty * vatPrice(unit(qty))))}</b><span>${qty} × ${pLei(unit(qty))} · ${vatLabel()}</span>`;
-  $('#pdp-bar-btn').textContent = p.colors && !color ? 'Alege culoarea' : 'Adaugă în coș';
 }
 const barIO = new IntersectionObserver(([en]) => {
   const show = !en.isIntersecting;

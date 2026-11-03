@@ -21,7 +21,8 @@
 /* ---------- Titlu ---------- */
 .pdp__body { padding: 0 var(--gutter); }
 .pdp__head { margin-top: 16px; }
-.pdp__brand { display: inline-flex; align-items: center; min-height: 28px; font-size: 14px; font-weight: 600; color: var(--secondary); text-decoration: none; }
+/* Ținta de 44 px fără să mute rândul: spațiu în plus în jur, compensat cu margini negative */
+.pdp__brand { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding-inline: 8px; margin: -8px -8px -8px -8px; font-size: 14px; font-weight: 600; color: var(--secondary); text-decoration: none; }
 .pdp__brand[hidden] { display: none; }
 .pdp__title { font-size: 22px; line-height: 1.25; font-weight: 650; letter-spacing: -.02em; text-wrap: pretty; }
 .pdp__code { margin-top: 4px; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
@@ -67,7 +68,7 @@
 .tier__q { font-size: 13px; color: var(--ink-2); white-space: nowrap; }
 .tier.is-on .tier__q { color: var(--secondary); font-weight: 600; }
 .tier__p { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
-.tier__off { font-size: 12px; font-weight: 600; color: var(--green); }
+.tier__off { font-size: 13px; font-weight: 600; color: var(--green); }
 .tiers__list li:first-child .tier__off { color: var(--ink-3); font-weight: 500; }
 
 /* Cantitatea și butonul pe același rând, apoi totalul */
@@ -156,9 +157,8 @@ body.has-bar .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
 
 @media (max-width: 359px) {
   .pdp__title { font-size: 20px; }
-  .tier__q { font-size: 12px; }
   .tier__p { font-size: 14px; }
-  .pbuy { grid-template-columns: 124px minmax(0, 1fr); gap: 8px; }
-  .pbuy .step button { width: 38px; }
-  .pbuy .btn { font-size: 15px; }
+  /* Cantitatea păstrează 3 × 44 px și la 320 px (M.148); butonul ia restul */
+  .pbuy { grid-template-columns: 132px minmax(0, 1fr); gap: 8px; }
+  .pbuy .btn { font-size: 15px; padding: 0 8px; }
 }
