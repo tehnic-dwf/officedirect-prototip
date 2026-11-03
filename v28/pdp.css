@@ -9,8 +9,8 @@
 .gal__track::-webkit-scrollbar { display: none; }
 .gal__track li { flex: 0 0 100%; scroll-snap-align: start; }
 .gal.is-multi .gal__track li { flex-basis: calc(100% - 40px); }
-.gal__slide { position: relative; display: block; width: 100%; height: clamp(228px, 66vw, 268px); padding: 0; border: 0; border-radius: var(--r-card); background: var(--mist); cursor: zoom-in; overflow: hidden; }
-.gal__slide img { width: 100%; height: 100%; object-fit: contain; padding: 20px; mix-blend-mode: multiply; transition: transform .5s var(--ease); }
+.gal__slide { position: relative; display: block; width: 100%; height: clamp(228px, 66vw, 268px); padding: 0; border: 0; border-radius: var(--r-card); background: var(--photo); box-shadow: inset 0 0 0 1px var(--photo-edge); cursor: zoom-in; overflow: hidden; }
+.gal__slide img { width: 100%; height: 100%; object-fit: contain; padding: 14px; mix-blend-mode: multiply; transition: transform .5s var(--ease); }
 .gal__slide:active img { transform: scale(.98); }
 .gal__z { position: absolute; right: 10px; bottom: 10px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgb(255 255 255 / .92); color: var(--ink); font-size: 18px; box-shadow: 0 1px 2px rgb(42 22 64 / .12); pointer-events: none; }
 .gal__dots { display: flex; justify-content: center; gap: 6px; height: 6px; margin-top: 12px; }
@@ -36,7 +36,25 @@
 .pprice__sub { margin-top: 2px; font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .pprice__sub b { font-weight: 650; color: var(--ink); }
 .pdp__head .card__flag { display: inline-flex; margin: 0 0 0 8px; vertical-align: middle; }
-.pprice__save { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 6px; background: var(--sale-tint); color: var(--sale); font-size: 14px; font-weight: 600; }
+.pprice__prev { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 15px; color: var(--ink-2); }
+.pprice__prev s { color: var(--ink-3); }
+.pprice__save { margin-top: 4px; font-size: 15px; font-weight: 600; color: var(--sale); }
+/* (rândurile cu etichete de mai jos nu se mai folosesc; reducerea e în varianta R6: preț anterior + economie, 03.11.2026)
+   Reducerea pe rânduri cu etichete (council 03.11.2026: Pr2): se vede ce înseamnă fiecare sumă, iar economia de volum
+   are eticheta ei separată, în total („cu prețul de volum”). Un singur termen: „preț anterior” (G-37, M.155, M.168) */
+.pprice__rows { display: grid; gap: 4px; margin: 10px 0 0; }
+.pprice__rows div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 15px; }
+.pprice__rows dt { color: var(--ink-2); }
+.pprice__rows dd { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pprice__rows s { font-weight: 400; color: var(--ink-3); }
+.pprice__rows .is-sale { color: var(--sale); }
+/* S5: „adică 3,40 lei / 100 coli” lipit de preț; reducerea într-un grup cu chenar fin, separat de prețul de volum */
+.pprice__unit { margin-top: 2px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pgroup { margin-top: 14px; padding: 10px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.pgroup__t { font-size: 14px; font-weight: 650; color: var(--sale); }
+.pgroup__line { margin-top: 2px; font-size: 15px; color: var(--ink-2); }
+.pgroup__line s { color: var(--ink-3); }
+.pgroup__line b { font-weight: 650; color: var(--sale); }
 .pprice__note { margin-top: 6px; font-size: 14px; line-height: 1.4; color: var(--ink-3); }
 
 /* Compatibilitate (toner, cilindru): înainte de cantitate și buton */
@@ -59,9 +77,13 @@
 .pcolors__err { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--sale); }
 
 /* Prețurile de volum: fiecare prag e un buton; procentul arată cât scade prețul */
-.tiers { margin-top: 16px; }
-.tiers__title { font-size: 15px; color: var(--ink-2); }
+/* Prețul de volum e un grup al lui, cu chenar fin și titlu: nu are roșu și nici preț tăiat, ca să nu se confunde cu reducerea (S5, council 03.11.2026) */
+.tiers { margin-top: 16px; padding: 10px 12px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.tiers__title { font-size: 15px; font-weight: 600; color: var(--ink); }
 .tiers__list { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+/* Toate chenarele au aceeași înălțime și aceleași trei rânduri (prag, preț, reducere), și primul, care nu are reducere */
+.tiers__list li { display: flex; }
+.tiers__list .tier { flex: 1; margin: 0; } /* .tier are margine de 24 px din tabelul de volum de pe prima pagină */
 .tier { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 100%; min-height: 60px; padding: 6px 2px; border: 0; border-radius: var(--r-ctl); background: #fff; box-shadow: inset 0 0 0 1.5px var(--line-2); color: var(--ink); cursor: pointer; transition: box-shadow .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease); }
 .tier:active { transform: scale(.97); }
 .tier.is-on { background: var(--secondary-tint); box-shadow: inset 0 0 0 2px var(--secondary); }

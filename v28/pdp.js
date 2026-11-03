@@ -171,17 +171,21 @@ const rows = p.tiers ? [[1, base], ...p.tiers] : null;
 const tierOf = n => [...rows].reverse().find(([min]) => n >= min)[0];
 const dateFmt = new Intl.DateTimeFormat('ro-RO', { weekday: 'long', day: 'numeric', month: 'long' });
 
+// Prețul pe 100 de coli (sau pe bucată) stă lipit de prețul mare, ca „adică …”: e același preț, socotit altfel, nu un preț redus.
+// Se recalculează când alegi un prag de volum, ca să nu contrazică pragurile (PDP-12)
+const unitLine = price => `adică ${perUnit(p, price).replace('/', ' / ')}`;
 function priceHTMLpdp() {
-  const off = p.old ? Math.round((1 - base / p.old) * 100) : 0;
+  const off = p.old ? Math.floor((1 - base / p.old) * 100) : 0;
   const ends = D.promoEnd && new Date(D.promoEnd + 'T23:59:59') > new Date() ? new Intl.DateTimeFormat('ro-RO', { day: 'numeric', month: 'long' }).format(new Date(D.promoEnd)) : '';
   return `<div class="pprice">
       <p class="price"><span class="price__main">${money.format(vatPrice(base))} <small>lei</small></span>${vatTag()}</p>
-      ${p.old ? `<p class="price__was">${wasHTML(p)}</p>` : ''}
-      ${p.per ? `<p class="pprice__sub">${perUnit(p)}</p>` : ''}
-      ${off ? `<p class="pprice__save">Economisești ${lei(round2(vatPrice(p.old) - vatPrice(base)))}${ends ? `, până pe ${ends}` : ''}</p>
-      <p class="pprice__note">Prețul tăiat e cel mai mic preț din ultimele 30 de zile.</p>` : ''}
+      ${p.per ? `<p class="pprice__unit" id="pprice-unit">${unitLine(base)}</p>` : ''}
+      ${off ? `<div class="pgroup pgroup--sale">
+        <p class="pgroup__t">Reducere -${off}%</p>
+        <p class="pgroup__line">Preț anterior <s>${pLei(p.old)}</s>, economisești <b>${lei(round2(vatPrice(p.old) - vatPrice(base)))}</b>${ends ? `, până pe ${ends}` : ''}</p>
+        <p class="pprice__note">Prețul anterior e cel mai mic din cele 30 de zile dinaintea reducerii.</p>
+      </div>` : ''}
       ${D.deee ? `<p class="pprice__note">Prețul include ${pLei(D.deee)} pentru colectarea deșeurilor electrice (DEEE).</p>` : ''}
-      <div class="pprice__vat" data-vat-switch></div>
     </div>`;
 }
 // Tonerul și cilindrul: cu ce imprimante merg, înainte de buton (constatarea 26)
@@ -206,11 +210,11 @@ function tiersHTML() {
   if (!rows || out) return '';
   const cur = tierOf(qty);
   return `<div class="tiers">
-    <p class="tiers__title">Preț pe ${one} după cantitate, ${vatLabel()}</p>
+    <p class="tiers__title">Preț de volum (lei/${one}, ${vatLabel()})</p>
     <ul class="tiers__list" style="--n:${rows.length}">${rows.map(([min, price]) => {
-      const off = Math.round((1 - price / base) * 100);
+      const off = Math.floor((1 - price / base) * 100);
       return `<li><button class="tier${min === cur ? ' is-on' : ''}" type="button" data-tier="${min}" aria-pressed="${min === cur}" aria-label="De la ${min} ${min === 1 ? one : many}, ${pLei(price)} pe ${one} ${vatLabel()}${off ? `, cu ${off}% mai puțin` : ''}">
-        <span class="tier__q">${min}+</span><span class="tier__p">${money.format(vatPrice(price))}</span>${off ? `<span class="tier__off">-${off}%</span>` : ''}
+        <span class="tier__q">${min}+</span><span class="tier__p">${money.format(vatPrice(price))}</span>${off ? `<span class="tier__off">-${off}%</span>` : '<span class="tier__off" aria-hidden="true">&nbsp;</span>'}
       </button></li>`;
     }).join('')}</ul>
   </div>`;
@@ -221,8 +225,8 @@ function totalHTML() {
   const saved = round2(qty * (base - u));
   const next = p.tiers?.find(([min]) => qty < min);
   return `<p class="ptotal__sum"><span>${qty} × ${pLei(u)}</span><b>${lei(round2(qty * vatPrice(u)))}</b></p>
-    <p class="ptotal__sub">Total ${vatLabel()}${saved > 0 ? ` · <span class="ptotal__save">economisești ${lei(round2(qty * (vatPrice(base) - vatPrice(u))))}</span>` : ''}</p>
-    ${next ? `<button class="ptotal__next" type="button" data-tier="${next[0]}">Încă ${cate(next[0] - qty, many)} și plătești ${pLei(next[1])}/${one}<span>Pune ${next[0]} în coș: economisești ${lei(round2(next[0] * (vatPrice(u) - vatPrice(next[1]))))}</span></button>` : ''}`;
+    <p class="ptotal__sub">Total ${vatLabel()}${saved > 0 ? ` · <span class="ptotal__save">plătești cu ${lei(round2(qty * (vatPrice(base) - vatPrice(u))))} mai puțin la prețul de volum</span>` : ''}</p>
+    ${next ? `<button class="ptotal__next" type="button" data-tier="${next[0]}">Încă ${cate(next[0] - qty, many)} și plătești ${pLei(next[1])}/${one}<span>Pune ${next[0]} în coș: plătești cu ${lei(round2(next[0] * (vatPrice(u) - vatPrice(next[1]))))} mai puțin</span></button>` : ''}`;
 }
 function inCartHTML() {
   const n = qtyOf(pid);
@@ -335,6 +339,7 @@ hooks.cart.push(renderAssure);
 const buyBar = $('#pdp-bar');
 function updateBar() {
   if (out) return;
+  const ul = $('#pprice-unit'); if (ul) ul.textContent = unitLine(unit(qty));
   $('#pdp-bar-price').innerHTML = `<b>${lei(round2(qty * vatPrice(unit(qty))))}</b><span>${qty} × ${pLei(unit(qty))} · ${vatLabel()}</span>`;
 }
 const barIO = new IntersectionObserver(([en]) => {

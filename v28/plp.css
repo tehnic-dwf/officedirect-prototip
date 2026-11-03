@@ -57,7 +57,28 @@
 
 /* ---------- Grila: două coloane, rândurile cardurilor aliniate (subgrid) ---------- */
 .plp__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 32px; margin-top: 16px; padding: 0 var(--gutter); }
-.plp__grid .card { grid-row: span 6; }
+.plp__grid .card { grid-row: span 5; }
+/* Lista din categorie și căutare (03.11.2026, L1 ordonat): un produs pe rând, ca Lyreco, eMAG, Currys pe mobil.
+   Hârtiile se aleg după specificații, nu după aspect, iar într-o listă atributele stau la aceeași poziție și se compară de sus în jos.
+   Poza mică în stânga; în dreapta trei blocuri: ce e (eticheta, nume, atribute), cât costă (preț „cu TVA” pe un rând, reducerea),
+   cât costă la comparat (pe 100 de coli, de la N bucăți); butonul pe toată lățimea coloanei. Linie fină între produse, fără cutii. */
+.plp__grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+.plp__grid .card { grid-row: auto; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "img head" "img price" "img buy" "img extra"; column-gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); }
+.plp__grid .card__media { grid-area: img; align-self: start; }
+.plp__grid .card__head { grid-area: head; }
+.plp__grid [data-price] { grid-area: price; }
+.plp__grid .buy { grid-area: buy; margin-top: 12px; }
+.plp__grid .card__extra { grid-area: extra; }
+.plp__grid .mbadge { display: none; }
+.plp__grid .card__img img, .be-c .plp__grid .card__img img { padding: 8px; }
+.plp__grid .card__name { margin-top: 0; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.plp__grid .card__meta { margin-top: 2px; }
+.plp__grid .price { margin-top: 10px; }
+.plp__grid .price__main { font-size: 21px; }
+.plp__grid .card .vat-tag { flex-basis: auto; }
+.plp__grid .card__per, .plp__grid .card__vol { margin-top: 4px; font-size: 13px; }
+.plp__grid .card__tag { display: inline-flex; margin-bottom: 4px; }
+.plp__grid .b2b-tile, .plp__grid > :not(.card) { grid-row: auto; }
 @supports not (grid-template-rows: subgrid) { .plp__grid .card { grid-row: auto; } }
 
 /* Cont de firmă, o dată în listă, pe toată lățimea */

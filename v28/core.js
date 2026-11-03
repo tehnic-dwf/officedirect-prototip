@@ -204,17 +204,26 @@ function observeCards(root) { $$('[data-card]', root).forEach(el => impressionIO
 /* ---------- Carduri de produs ---------- */
 function perUnit(p, price = p.price) { return p.per ? `${lei(round2(vatPrice(price) / p.per[0]))}/${p.per[1]}` : ''; }
 
+// Procentul se rotunjește mereu în jos (10,53% devine -10%), ca reducerea să nu pară mai mare decât e.
 // Prețul tăiat și procentul, la fel pe carduri, în „Văzute recent”, în coș și în sugestii (M.168, G-37)
 function wasHTML(p) {
   if (!p.old) return '';
-  const off = Math.round((1 - p.price / p.old) * 100);
-  return `<s class="price__old"><span class="sr-only">preț vechi </span>${pLei(p.old)}</s><span class="price__off"><span class="sr-only">reducere </span>-${off}%</span>`;
+  const off = Math.floor((1 - p.price / p.old) * 100);
+  return `<s class="price__old"><span class="sr-only">preț anterior </span>${pLei(p.old)}</s><span class="price__off"><span class="sr-only">reducere </span>-${off}%</span>`;
 }
 function priceHTML(id) {
   const p = P[id];
   // Un singur preț, cu baza scrisă lângă el; dedesubt reducerea (în aceeași bază), apoi prețul pe unitate, gri
   return `<p class="price"><span class="price__main">${money.format(vatPrice(p.price))} <small>lei</small></span>${vatTag()}</p>${p.old ? `<p class="price__was">${wasHTML(p)}</p>` : ''}
-    ${p.per ? `<p class="card__per">${perUnit(p)}</p>` : ''}${stockHTML(p)}`;
+    ${p.per ? `<p class="card__per">${perUnit(p)}</p>` : ''}${volHTML(p)}${stockHTML(p)}`;
+}
+// Prețul de volum pe card: un rând de informație, fără buton (council 03.11.2026, P1). Cantitatea se alege pe pagina produsului;
+// un buton „+ Adaugă 50” punea ~1.200 lei în coș dintr-o atingere (M.029, PLP-28). Același termen ca pe pagina produsului (G-37)
+function volHTML(p) {
+  if (!p.tiers || p.stock === 0) return '';
+  const [one, many] = unitWord(p);
+  const [n, v] = p.tiers[0];
+  return `<p class="card__vol">De la ${cate(n, many)}: <b>${pLei(v)}/${one}</b></p>`;
 }
 
 // Un singur rând, ca toate cardurile din listă să rămână la aceeași înălțime
@@ -230,9 +239,9 @@ function hintHTML(id) {
   const cur = [...p.tiers].reverse().find(([min]) => q >= min);
   if (cur) return per + `<p class="hint is-on"><i class="ph ph-check" aria-hidden="true"></i><span><span class="sr-only">Ai prețul de volum: </span>${pLei(cur[1])}/${one}</span></p>`;
   const next = p.tiers.find(([min]) => q < min);
+  // Înainte de adăugare, prețul de volum e deja în blocul de preț; după adăugare, rândul spune cât mai e până la prag
   if (q) return per + `<p class="hint">Încă ${cate(next[0] - q, many)} pentru ${pLei(next[1])}/${one}</p>`;
-  return per + `<button class="tier-add" type="button" data-tier-add="${id}" data-q="${next[0]}" aria-label="Adaugă ${cate(next[0], many)} în coș, la ${pLei(next[1])} pe ${one} ${vatLabel()}">
-      <span class="tier-add__q">${next[0]}+ ${many}</span><span class="tier-add__p">${pLei(next[1])}/${one}</span><i class="ph ph-plus" aria-hidden="true"></i></button>`;
+  return per;
 }
 
 
@@ -273,14 +282,22 @@ const inStock = id => P[id].stock !== 0;
 // Pentru comparație rămân ?eticheta=a (sub nume și sub preț), b (pe poză, jos), d (bandă sus pe poză)
 const BADGE_V = /^[abcd]$/.test(params.get('eticheta')) ? params.get('eticheta') : 'c';
 document.documentElement.classList.add('be-' + BADGE_V);
+// Varianta de contrast, de comparat: ?contrast=1 o pornește, ?contrast=0 o oprește; rămâne activă cât navighezi în sesiune
+if (params.has('contrast')) store.set('contrast', params.get('contrast') === '1', sessionStorage);
+if (store.get('contrast', false, sessionStorage)) document.documentElement.classList.add('hi-ct');
 // O singură etichetă pe poză (B, C, D), în ordinea: epuizat, ultimele bucăți, cel mai vândut, nou.
 // `list` e lista în care stă cardul: în „Cele mai cumpărate” nu repetăm „Cel mai vândut”, în „Nou în catalog” nu repetăm „Nou”
 function badgeOf(p, list) {
   if (p.stock === 0) return ['out', 'Stoc epuizat'];
   if (p.stock > 0 && p.stock <= LOW_STOCK) return ['low', `Ultimele ${p.stock} buc.`];
   if (p.best && list !== 'best') return ['best', 'Cel mai vândut'];
-  if (p.isNew && list !== 'new') return ['new', 'Nou'];
+  if (p.isNew && !p.best && list !== 'new') return ['new', 'Nou'];
   return null;
+}
+// În lista din categorie și căutare, poza e mică: eticheta stă ca text deasupra numelui, nu peste produs
+function tagHTML(p, list) {
+  const l = badgeOf(p, list);
+  return l ? `<span class="card__tag flag--${l[0]}">${l[1]}</span>` : '';
 }
 function mediaBadgeHTML(p, list) {
   if (BADGE_V === 'a') return '';
@@ -291,7 +308,7 @@ function flagHTML(p, list) {
   if (BADGE_V !== 'a' && !document.body.matches('[data-page="pdp"]')) return '';
   if (p.stock === 0) return '';
   if (p.best && list !== 'best') return '<p class="card__flag"><span class="flag flag--best">Cel mai vândut</span></p>';
-  if (p.isNew && list !== 'new') return '<p class="card__flag"><span class="flag flag--new">Nou</span></p>';
+  if (p.isNew && !p.best && list !== 'new') return '<p class="card__flag"><span class="flag flag--new">Nou</span></p>';
   return '';
 }
 function stockHTML(p) {
@@ -303,7 +320,9 @@ function stockHTML(p) {
 function cardHTML(id, index, list) {
   const p = P[id];
   const url = pdpHref(id);
-  // Șase rânduri aliniate între carduri (subgrid): poză, nume, atribute, preț (cu și fără TVA, pe unitate), buton, prag de volum
+  // Cinci rânduri aliniate între carduri (subgrid): poză, nume cu atribute, preț, buton, prag de volum.
+  // În „Nou în catalog” pragul lipsește: lista e pentru descoperire, iar un singur prag lăsa gol sub toate butoanele (M.005).
+  // Numele și atributele stau în același rând, ca un nume pe două rânduri la vecin să nu lase o gaură între nume și atribute
   // Câte culori are produsul, ca text neutru în atribute, nu ca etichetă (M.167)
   const meta = p.meta ?? [p.brand || p.sub, shortUnit(p.unit), p.colors && cate(p.colors.length, 'culori')].filter(Boolean).join(' · ');
   return `<li class="card${p.stock === 0 ? ' is-out' : ''}" data-card="${id}" data-index="${index}">
@@ -313,11 +332,14 @@ function cardHTML(id, index, list) {
       </a>
       ${mediaBadgeHTML(p, list)}
     </div>
-    <h3 class="card__name"><a href="${url}" data-select="${id}">${p.cardName || (p.meta != null ? p.name : shortName(p))}</a></h3>
-    <div class="card__info">${flagHTML(p, list)}<p class="card__meta">${meta ? meta.split(' · ').map(s => `<span class="nw">${s}</span>`).join(' · ') : ''}</p></div>
+    <div class="card__head">
+      ${tagHTML(p, list)}
+      <h3 class="card__name"><a href="${url}" data-select="${id}">${p.cardName || (p.meta != null ? p.name : shortName(p))}</a></h3>
+      <div class="card__info">${BADGE_V === 'a' ? flagHTML(p, list) : ''}<p class="card__meta">${meta ? meta.split(' · ').map(s => `<span class="nw">${s}</span>`).join(' · ') : ''}</p></div>
+    </div>
     <div data-price="${id}">${priceHTML(id)}</div>
     <div class="buy" data-buy="${id}">${buyHTML(id)}</div>
-    <div class="card__extra" data-hint="${id}">${hintHTML(id)}</div>
+    ${list === 'new' ? '' : `<div class="card__extra" data-hint="${id}">${hintHTML(id)}</div>`}
   </li>`;
 }
 

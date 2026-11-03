@@ -125,7 +125,8 @@ function render() {
   const all = sorted(results(sel));
   const total = all.length;
   const list = all.slice(0, shown);
-  grid.innerHTML = list.map((id, i) => cardHTML(id, i + 1) + (i === B2B_AFTER - 1 && total > B2B_AFTER && !member ? b2bTile : '')).join('');
+  // Sortată după vânzări, lista spune deja care sunt cele mai vândute: eticheta nu se mai repetă pe fiecare card (M.167)
+  grid.innerHTML = list.map((id, i) => cardHTML(id, i + 1, sort === 'best' ? 'best' : undefined) + (i === B2B_AFTER - 1 && total > B2B_AFTER && !member ? b2bTile : '')).join('');
   observePromo();
   observeCards(grid);
   const n = activeCount(sel);

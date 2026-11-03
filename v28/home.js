@@ -116,7 +116,7 @@ function renderTier() {
   const p = P['biblioraft-5'];
   const rows = [[1, p.price], ...p.tiers];
   $('#tier-rows').innerHTML = rows.map(([q, v], i) => {
-    const save = Math.round((1 - v / p.price) * 100);
+    const save = Math.floor((1 - v / p.price) * 100);
     const label = i === 0 ? `1-${rows[1][0] - 1}` : `${q}+`;
     return `<tr class="${i === rows.length - 1 ? 'is-best' : ''}"><td>${label} buc.</td><td>${lei(v)}</td><td>${lei(net(v))}</td><td>${save ? `-${save}%` : '<span class="sr-only">fără reducere</span>'}</td></tr>`;
   }).join('');
@@ -215,7 +215,7 @@ if (FIRMA) {
   const da = P['double-a'];
   const rows = [[1, da.price], ...da.tiers.filter(([q]) => q !== 100)];
   const t1 = $('#hf1-tiers');
-  if (t1) { t1.style.setProperty('--n', rows.length); t1.innerHTML = rows.map(([q, v], i) => `<span>${q === 1 ? '1 top' : `${q}+ topuri`}<b>${money.format(v)}</b>${i ? `<em>-${Math.round((1 - v / da.price) * 100)}%</em>` : ''}</span>`).join(''); }
+  if (t1) { t1.style.setProperty('--n', rows.length); t1.innerHTML = rows.map(([q, v], i) => `<span>${q === 1 ? '1 top' : `${q}+ topuri`}<b>${money.format(v)}</b>${i ? `<em>-${Math.floor((1 - v / da.price) * 100)}%</em>` : ''}</span>`).join(''); }
   const kitSum = round2(KIT.reduce((s, [id, q]) => s + q * unitPrice(id, q), 0));
   const sub = $('#hf3-sub');
   if (sub) sub.innerHTML = `${KIT.map(([, , label]) => label).join(', ')}: <b>${pLei(kitSum)}</b> ${vatLabel()}`;
