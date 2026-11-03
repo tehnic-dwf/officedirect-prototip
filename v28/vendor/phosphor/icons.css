@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Phosphor";
+  src: url("./Phosphor-subset.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+.ph {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "Phosphor" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.ph.ph-archive:before { content: "\e00c"; }
+.ph.ph-arrow-right:before { content: "\e06c"; }
+.ph.ph-arrow-u-up-left:before { content: "\e08a"; }
+.ph.ph-arrows-down-up:before { content: "\e098"; }
+.ph.ph-bank:before { content: "\e0b4"; }
+.ph.ph-bell:before { content: "\e0ce"; }
+.ph.ph-buildings:before { content: "\e102"; }
+.ph.ph-caret-down:before { content: "\e136"; }
+.ph.ph-caret-left:before { content: "\e138"; }
+.ph.ph-caret-right:before { content: "\e13a"; }
+.ph.ph-chat-circle-dots:before { content: "\e16c"; }
+.ph.ph-check:before { content: "\e182"; }
+.ph.ph-check-circle:before { content: "\e184"; }
+.ph.ph-clock-counter-clockwise:before { content: "\e1a0"; }
+.ph.ph-device-mobile:before { content: "\e1e0"; }
+.ph.ph-files:before { content: "\e710"; }
+.ph.ph-funnel-x:before { content: "\e26c"; }
+.ph.ph-heart:before { content: "\e2a8"; }
+.ph.ph-info:before { content: "\e2ce"; }
+.ph.ph-lightning:before { content: "\e2de"; }
+.ph.ph-list:before { content: "\e2f0"; }
+.ph.ph-magnifying-glass:before { content: "\e30c"; }
+.ph.ph-magnifying-glass-plus:before { content: "\e310"; }
+.ph.ph-minus:before { content: "\e32a"; }
+.ph.ph-package:before { content: "\e390"; }
+.ph.ph-pen:before { content: "\e3aa"; }
+.ph.ph-phone:before { content: "\e3b8"; }
+.ph.ph-plus:before { content: "\e3d4"; }
+.ph.ph-printer:before { content: "\e3dc"; }
+.ph.ph-receipt:before { content: "\e3ec"; }
+.ph.ph-seal-check:before { content: "\e606"; }
+.ph.ph-shopping-bag:before { content: "\e416"; }
+.ph.ph-sliders-horizontal:before { content: "\e434"; }
+.ph.ph-sparkle:before { content: "\e6a2"; }
+.ph.ph-spray-bottle:before { content: "\e7e4"; }
+.ph.ph-squares-four:before { content: "\e464"; }
+.ph.ph-stack:before { content: "\e466"; }
+.ph.ph-tag:before { content: "\e478"; }
+.ph.ph-trash:before { content: "\e4a6"; }
+.ph.ph-truck:before { content: "\e4b4"; }
+.ph.ph-user:before { content: "\e4c2"; }
+.ph.ph-users-three:before { content: "\e68e"; }
+.ph.ph-x:before { content: "\e4f6"; }

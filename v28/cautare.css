@@ -1,0 +1,61 @@
+/* OfficeDirect · pagina de rezultate ale căutării. Grila, bara fixă, „mai multe” și foaia de sortare vin din plp.css; tokenurile din v28.css (DESIGN.md 7.2). */
+
+/* Pe rezultate, câmpul cu termenul rămâne sub header; bara cu categorii lipită sub header face separarea */
+[data-page="serp"] .hdr.is-compact:not(.is-searching) { box-shadow: none; }
+
+/* ---------- Ce ai căutat ---------- */
+.srp__head { padding: 4px var(--gutter) 0; }
+.srp__title { font-size: 26px; line-height: 1.15; font-weight: 650; letter-spacing: -.025em; overflow-wrap: anywhere; text-wrap: balance; }
+
+/* ---------- Răspuns rapid (livrare, retur, plată, program) ---------- */
+.ans { display: grid; grid-template-columns: 40px 1fr; gap: 14px; margin: 16px var(--gutter) 0; padding: 16px; border-radius: var(--r-card); background: var(--secondary-tint); }
+.ans > .ph { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--secondary); font-size: 22px; }
+.ans__title { font-size: 17px; line-height: 1.3; font-weight: 650; letter-spacing: -.01em; color: var(--secondary-900); }
+.ans__text { margin-top: 4px; font-size: 15px; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
+.ans__link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: 4px; color: var(--secondary); font-weight: 650; text-decoration: none; }
+.ans__link .ph { font-size: 16px; transition: transform .25s var(--ease); }
+.ans__link:active .ph { transform: translateX(3px); }
+.ans + .ans { margin-top: 8px; }
+
+/* Numărul de produse și sortarea, pe același rând */
+.srp__meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 2px; }
+.srp__meta .plp__count { margin-top: 0; }
+.srp__meta[hidden] { display: none; }
+.srp__vat { margin-top: 8px; }
+.srp__sort { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-right: -8px; padding: 0 8px; border: 0; border-radius: var(--r-ctl); background: none; color: var(--secondary); font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.srp__sort:active { background: var(--secondary-tint); }
+.srp__sort .ph { font-size: 18px; }
+
+/* ---------- Categoriile rezultatelor, fixe sub header ---------- */
+.srp__bar { position: sticky; top: 56px; z-index: 20; padding: 8px 0; background: #fff; transition: box-shadow .25s var(--ease); }
+.srp__bar.is-stuck { box-shadow: 0 1px 0 var(--line), 0 12px 24px -20px rgb(42 22 64 / .5); }
+.srp__bar[hidden] { display: none; }
+.scopes { display: flex; gap: 8px; min-width: 0; padding-left: var(--gutter); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent); mask-image: linear-gradient(90deg, #000 84%, transparent); }
+.scopes::-webkit-scrollbar { display: none; }
+.scopes li { flex: none; }
+.scopes li:last-child { padding-right: 24px; }
+.scopes:empty { display: none; }
+.srp__bar:has(.scopes:empty) { display: none; }
+.scope { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--mist); color: var(--ink); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease); }
+.scope:active { transform: scale(.97); }
+.scope[aria-pressed="true"] { background: var(--secondary-tint); box-shadow: inset 0 0 0 1.5px var(--secondary); color: var(--secondary-900); font-weight: 600; }
+.scope__n { font-size: 13px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.scope[aria-pressed="true"] .scope__n { color: var(--secondary); }
+
+/* ---------- Fără rezultate ---------- */
+.srp-zero { margin: 0 var(--gutter); }
+.srp-zero > .srp-zero__label:first-child { margin-top: 16px; }
+.srp-zero__label { margin: 24px 0 10px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.srp-cats a { display: grid; grid-template-columns: 24px 1fr 16px; align-items: center; gap: 12px; min-height: 52px; text-decoration: none; border-bottom: 1px solid var(--line); }
+.srp-cats .ph:first-child { font-size: 22px; color: var(--secondary); }
+.srp-cats .ph:last-child { font-size: 16px; color: var(--ink-3); }
+.srp-zero__grid { margin-top: 0; padding: 0; }
+
+/* ---------- Ajutor ---------- */
+.srp__help { display: grid; grid-template-columns: 24px 1fr; gap: 10px; margin: var(--section) var(--gutter) 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.srp__help .ph { font-size: 22px; color: var(--secondary); }
+.srp__help a { color: var(--secondary); font-weight: 600; white-space: nowrap; text-underline-offset: 3px; }
+
+@media (max-width: 359px) {
+  .srp__title { font-size: 24px; }
+}

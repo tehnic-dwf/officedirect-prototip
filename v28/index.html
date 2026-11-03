@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Papetărie și birotică pentru firme · OfficeDirect</title>
+<meta name="description" content="Hârtie, toner, bibliorafturi și curățenie de la peste 300 de branduri. Factură pe CUI, plată prin OP, card sau ramburs, livrare în 24-48 de ore.">
+<link rel="icon" href="https://www.officedirect.ro/image/apple-touch-icon.png">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/geist-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/geist-latin-ext.woff2" crossorigin>
+<link rel="stylesheet" href="vendor/geist.css">
+<link rel="stylesheet" href="vendor/phosphor/icons.css">
+<link rel="stylesheet" href="v28.css?v=49">
+<!-- Varianta primului ecran (?hero=a…l), blocul pentru firme (?firma=1, 2, 3; implicit 2; 0 = blocul vechi) și textul de sub titlu (?lead=0 = fraza veche cu nota 4,9/5) -->
+<script>(() => { const q = new URLSearchParams(location.search), h = q.get('hero'), f = q.get('firma') ?? '2'; document.documentElement.classList.add('js', 'hv-' + (/^[a-l]$/.test(h) ? h : 'g'), ...(/^[123]$/.test(f) ? ['hf-' + f] : []), ...(q.get('lead') === '0' ? ['hl-0'] : [])); })()</script>
+<script src="plp-data.js?v=3" defer></script>
+<script src="search-data.js?v=1" defer></script>
+<script src="core.js?v=18" defer></script>
+<script src="search.js?v=2" defer></script>
+<script src="home.js?v=8" defer></script>
+</head>
+<body data-page="home">
+<a class="skip" href="#continut">Sari la conținut</a>
+
+<!-- Header fix de 56 px: meniu, logo, căutare (iconiță după derulare), cont, coș (M.044, constatarea 61) -->
+<header class="hdr" id="bar">
+  <button class="hdr__icon" type="button" data-open="menu" aria-haspopup="dialog" aria-label="Meniu"><i class="ph ph-list" aria-hidden="true"></i></button>
+  <a class="hdr__logo" href="https://www.officedirect.ro/" aria-label="OfficeDirect, pagina principală">
+    <img src="../assets/officedirect-logo.svg" alt="OfficeDirect" width="164" height="24">
+  </a>
+  <button class="hdr__icon hdr__find" type="button" aria-label="Caută" aria-controls="hsearch"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></button>
+  <a class="hdr__icon" href="https://www.officedirect.ro/index.php?route=account/account" aria-label="Contul meu"><i class="ph ph-user" aria-hidden="true"></i></a>
+  <button class="hdr__icon bar__cart" type="button" data-open="sheet-cos" aria-haspopup="dialog" aria-label="Coșul meu, gol">
+    <i class="ph ph-shopping-bag" aria-hidden="true"></i>
+    <span class="bar__count" aria-hidden="true" hidden>0</span>
+  </button>
+</header>
+<div class="hsearch" id="hsearch">
+  <div class="hsearch__in">
+  <form class="search" id="search" role="search" action="cautare.html" method="get">
+    <label class="sr-only" for="q">Caută produs sau cod</label>
+    <input class="search__input" id="q" name="q" type="search" placeholder="Caută produs sau cod" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="search">
+    <button class="search__clear" type="button" aria-label="Șterge textul" hidden><i class="ph ph-x" aria-hidden="true"></i></button>
+    <button class="search__go" type="submit" aria-label="Caută"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></button>
+  </form>
+  <button class="bar__cancel" type="button" hidden>Anulează</button>
+  </div>
+</div>
+
+<!-- Sugestii la tastare, cu imagine, categorie și preț (M.046, M.180) -->
+<div class="suggest" id="suggest" hidden>
+  <div class="suggest__inner">
+    <div id="suggest-live" hidden>
+      <a class="suggest__query" id="suggest-query" href="#"></a>
+      <ul class="suggest__terms" id="suggest-terms" aria-label="Căutări sugerate"></ul>
+      <ul class="suggest__links" id="suggest-answers"></ul>
+      <ul class="suggest__cats" id="suggest-cats"></ul>
+      <p class="suggest__label" id="suggest-count"></p>
+      <ul class="suggest__products" id="suggest-products" data-list="hp_cautare_sugestii" data-list-name="Căutare - sugestii"></ul>
+    </div>
+    <div id="suggest-idle">
+      <div id="suggest-recent" hidden>
+        <div class="sec-head"><p class="suggest__label">Căutările tale recente</p><button class="text-btn" type="button" id="recent-clear">Șterge</button></div>
+        <ul class="suggest__recent" id="suggest-recent-list"></ul>
+      </div>
+      <p class="suggest__label">Căutate des</p>
+      <div class="chips" id="suggest-popular"></div>
+      <p class="suggest__label">Răspunsuri rapide</p>
+      <ul class="suggest__links" id="suggest-help"></ul>
+    </div>
+  </div>
+</div>
+
+<main id="continut">
+
+  <!-- Varianta A. Hero: bloc în culoarea brandului, text pe fundal plin (lizibil oricând), categoriile chiar în primul ecran (H-15, H-18, M.004, M.009, M.173) -->
+  <section class="hero" data-hero="a" aria-labelledby="hero-title">
+    <div class="hero__inner">
+      <p class="hero__chip"><span class="hero__star" aria-hidden="true">★</span>4,9/5<span class="hero__chip-long">din aproape 6.000 de evaluări</span><span class="hero__chip-short">de la clienți</span></p>
+      <h1 class="hero__title" id="hero-title">Papetărie și birotică pentru <span class="hero__accent">firma&nbsp;ta</span></h1>
+      <p class="hero__sub">Livrare în 24-48 de ore, factură pe CUI și plată prin OP.</p>
+      <div class="hero__guest">
+        <a class="btn btn--light btn--block" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont de firmă</a>
+        <p class="hero__login">Ai deja cont? <a href="https://www.officedirect.ro/index.php?route=account/login">Intră și reia o comandă</a></p>
+      </div>
+      <!-- Clienții cu cont văd ultima comandă în locul înscrierii. Demo: ?revine=1 -->
+      <div class="hero__member" hidden></div>
+    </div>
+  </section>
+  <!-- Varianta B. Căutarea întâi: cine caută cumpără de câteva ori mai des; contul de firmă stă imediat dedesubt -->
+  <section class="hero hero--b" data-hero="b" aria-labelledby="hb-title">
+    <div class="hb__pad">
+      <p class="hb__kicker"><span class="hero__star" aria-hidden="true">★</span>4,9/5 · birotică pentru firme</p>
+      <h1 class="hb__title" id="hb-title">Ce comanzi azi pentru&nbsp;birou?</h1>
+    </div>
+    <div class="hb__search"></div>
+    <ul class="hb__chips" aria-label="Căutate des">
+      <li><a class="chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=hartie%20a4">Hârtie A4</a></li>
+      <li><a class="chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+      <li><a class="chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+      <li><a class="chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      <li><a class="chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=capse">Capse</a></li>
+    </ul>
+    <a class="hb__b2b" href="https://www.officedirect.ro/index.php?route=account/register">
+      <span><b>Cont de firmă</b>Factură pe CUI, plată prin OP și prețuri de volum</span>
+      <span class="hb__go">Creează</span>
+    </a>
+  </section>
+
+  <!-- Varianta C. Campania lunii în primul ecran: produsele noi primesc cea mai bună poziție și se măsoară (view_promotion) -->
+  <section class="hero hero--c" data-hero="c" aria-labelledby="hc-title">
+    <h1 class="sr-only" id="hc-title">Papetărie și birotică pentru firme</h1>
+    <a class="hc" id="feature" href="https://www.officedirect.ro/produse-din-hartie/agende-birou" data-promo="hp_hero_agende_2027" data-promo-name="Agende și calendare 2027" data-slot="hp_hero">
+      <span class="hc__media"><img src="img/photo/agende.webp" alt="" width="700" height="1050" fetchpriority="high"></span>
+      <span class="hc__body">
+        <span class="hc__kicker">Nou pentru 2027</span>
+        <span class="hc__title">Agende și calendare de birou</span>
+        <span class="hc__price">Calendar triptic de la <b data-price-inline="nou-calendar"></b></span>
+        <span class="btn btn--light btn--block">Vezi colecția</span>
+      </span>
+    </a>
+    <a class="hc-b2b" href="https://www.officedirect.ro/index.php?route=account/register">
+      <i class="ph ph-buildings" aria-hidden="true"></i>
+      <span><b>Ai firmă?</b> Cont cu plată prin OP</span>
+      <i class="ph ph-caret-right" aria-hidden="true"></i>
+    </a>
+  </section>
+
+  <!-- Varianta D. Beneficiile pentru firme ca plăci, cu un preț real de volum -->
+  <section class="hero hero--d" data-hero="d" aria-labelledby="hd-title">
+    <p class="hd__chip"><span class="hero__star" aria-hidden="true">★</span>4,9/5<span class="hero__chip-long">din aproape 6.000 de evaluări</span><span class="hero__chip-short">de la clienți</span></p>
+    <h1 class="hd__title" id="hd-title">Papetărie și birotică pentru <span>firma&nbsp;ta</span></h1>
+    <div class="hd__bento">
+      <a class="hd__tile hd__tile--big" href="https://www.officedirect.ro/organizare-si-arhivare">
+        <span class="hd__label">Prețuri de volum</span>
+        <span class="hd__price">7,99 lei <s>9,49 lei</s></span>
+        <span class="hd__note">Biblioraft Accenta, de la 200 buc.</span>
+        <img src="img/cut/biblioraft-5.webp" alt="" width="429" height="267">
+      </a>
+      <p class="hd__tile hd__tile--a"><i class="ph ph-receipt" aria-hidden="true"></i><b>Factură pe CUI</b></p>
+      <p class="hd__tile hd__tile--b"><i class="ph ph-bank" aria-hidden="true"></i><b>Plată prin OP</b></p>
+    </div>
+    <a class="btn btn--light btn--block hd__cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont de firmă</a>
+    <p class="hd__login">Ai deja cont? <a href="https://www.officedirect.ro/index.php?route=account/login">Intră și reia o comandă</a></p>
+  </section>
+
+  <!-- Varianta E (hibridul recomandat de council): căutarea întâi pe blocul prună, valoarea pentru firme, produsele noi în primul chip -->
+  <section class="hero hero--search hero--e" data-hero="e" aria-labelledby="he-title">
+    <div class="hb__pad">
+      <p class="he__rating"><span class="hero__star" aria-hidden="true">★</span>4,9/5<span class="hero__chip-long">din aproape 6.000 de evaluări</span><span class="hero__chip-short">de la clienți</span></p>
+      <h1 class="he__title" id="he-title">Papetărie și birotică pentru <span class="hero__accent">firma&nbsp;ta</span></h1>
+      <p class="he__lead">Peste 300 de branduri din stoc propriu, livrate în 24-48 de ore în toată țara.</p>
+    </div>
+    <div class="hb__search"></div>
+    <ul class="he__chips" aria-label="Căutate des">
+      <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+      <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+      <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+      <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+      <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+    </ul>
+    <div class="hero__guest he__guest">
+      <a class="he__b2b" href="https://www.officedirect.ro/index.php?route=account/register">
+        <span class="he__b2b-title">Cumperi pentru firmă?</span>
+        <span class="he__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</span>
+        <span class="he__b2b-cta">Creează cont de firmă<i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+      </a>
+      <p class="hero__login">Ai deja cont? <a href="https://www.officedirect.ro/index.php?route=account/login">Intră și reia o comandă</a></p>
+    </div>
+    <div class="hero__member hb__pad" hidden></div>
+  </section>
+
+  <!-- Varianta F. Vitrina: primul ecran arată produse reale, cu prețuri reale, ca un raft de catalog -->
+  <section class="hero hero--search hero--f" data-hero="f" aria-labelledby="he-title">
+    <ul class="hf__wall" data-list="hp_vitrina" data-list-name="Homepage - Vitrina" aria-label="Produse cerute des"></ul>
+    <div class="hb__pad hf__text">
+      <h1 class="hx__title" id="he-title">Papetărie și birotică pentru firme</h1>
+      <p class="he__lead">Peste 300 de branduri din stoc propriu, livrate în <span class="nowrap">24-48 de ore</span>. Clienții ne dau nota 4,9 din&nbsp;5.</p>
+    </div>
+    <div class="hb__search"></div>
+    <div class="hero__guest hb__pad"><a class="hx__b2b" href="https://www.officedirect.ro/index.php?route=account/register"><span><b>Cumperi pentru firmă?</b> Factură pe CUI, plată prin OP și prețuri de volum.</span><span class="hx__b2b-cta">Creează cont de firmă<i class="ph ph-arrow-right" aria-hidden="true"></i></span></a></div>
+    <div class="hero__member hb__pad" hidden></div>
+  </section>
+
+  <!-- Varianta G, implicită. Biroul: video scurt cu produse reale în folosință (biblioraft, dosare, agendă); pornește doar după încărcarea paginii -->
+  <section class="hero hero--search hero--photo hero--g" data-hero="g" aria-labelledby="he-title">
+    <div class="hp__scene">
+      <img src="img/photo/birou-poster.webp" alt="" width="1200" height="633" fetchpriority="high" style="object-position:58% 40%">
+      <video muted loop playsinline preload="none" aria-hidden="true" data-src="img/video/birou.mp4" style="object-position:58% 40%"></video>
+      <div class="hb__pad hp__text">
+        <h1 class="hp__title" id="he-title">Papetărie și birotică pentru firme</h1>
+        <p class="hp__lead">Peste 300 de branduri din stoc propriu, livrate în <span class="nowrap">24-48 de ore</span>.</p>
+        <p class="hp__rating"><span class="hero__star" aria-hidden="true">★</span><b>4,9/5</b> din aproape 6.000 de evaluări</p>
+        <!-- Două fapte publicate pe officedirect.ro, unul sub altul: termenul (prima întrebare a clientului) și cât de mare e catalogul.
+             Nota 4,9/5 nu apare până nu există acordul OfficeDirect și o explicație a sursei (sondajul de după comandă). -->
+        <ul class="hp__facts">
+          <li><i class="ph ph-truck" aria-hidden="true"></i>Livrare în 24-48 de ore</li>
+          <li><i class="ph ph-squares-four" aria-hidden="true"></i>20.000 de produse, 300+ branduri</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hp__sheet">
+      <div class="hb__search"></div>
+      <ul class="he__chips" aria-label="Căutate des">
+        <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+        <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      </ul>
+      <div class="hero__guest hb__pad">
+        <div class="hp__b2b">
+          <p class="hp__b2b-title">Cumperi pentru firmă?</p>
+          <p class="hp__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</p>
+          <p class="hp__b2b-actions">
+            <a class="hp__b2b-cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont</a>
+            <a class="hp__b2b-login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </div>
+
+        <!-- Firma 1: economia de volum arătată în bani, pe un produs real; duce la produse, nu la formularul de cont -->
+        <a class="hf hf--1" href="categorie.html?vol=da" data-firma="hp_firma_volum">
+          <span class="hf1__head"><img src="img/p/double-a.jpg" alt="" width="56" height="56"><span><b>Plătești mai puțin la cantitate</b>Hârtie Double A A4, preț pe top</span></span>
+          <span class="hf1__tiers" id="hf1-tiers"></span>
+          <span class="hf1__cta">Vezi produsele cu preț de volum<i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+
+        <!-- Firma 2 (implicită): ce contează pentru o firmă, în patru plăci, plus contul de firmă; un singur bloc, separat de categorii -->
+        <section class="hf hf--2" aria-labelledby="hf2-title" data-firma="hp_firma_beneficii">
+          <h2 class="hf2__title" id="hf2-title">Pentru firme</h2>
+          <ul class="hf2__tiles">
+            <li><a href="#firme"><i class="ph ph-receipt" aria-hidden="true"></i><span><b>Factură pe CUI</b>pe datele firmei</span></a></li>
+            <li><button type="button" data-open="sheet-livrare" aria-haspopup="dialog"><i class="ph ph-bank" aria-hidden="true"></i><span><b>Plată prin OP</b>card sau ramburs</span></button></li>
+            <li><a href="categorie.html?vol=da"><i class="ph ph-stack" aria-hidden="true"></i><span><b>Preț de volum</b>de la 25-50 buc.</span></a></li>
+            <li><button type="button" data-open="sheet-livrare" aria-haspopup="dialog"><i class="ph ph-truck" aria-hidden="true"></i><span><b>Livrare gratuită</b>de la 300&nbsp;lei</span></button></li>
+          </ul>
+          <div class="hf2__vat"><p id="hf2-vat">Prețuri afișate</p><div data-vat-switch></div></div>
+          <p class="hf2__acc">
+            <a class="hf2__cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont de firmă</a>
+            <a class="hf2__login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </section>
+
+        <!-- Firma 3: lista de bază a unui birou, pusă în coș dintr-o atingere; se poate modifica în coș -->
+        <div class="hf hf--3" data-firma="hp_firma_lista">
+          <p class="hf3__title">Lista de birou pentru o lună</p>
+          <p class="hf3__sub" id="hf3-sub"></p>
+          <ul class="hf3__thumbs" id="hf3-thumbs"></ul>
+          <button class="btn btn--secondary btn--block" type="button" data-kit>Pune lista în coș</button>
+        </div>
+      </div>
+      <div class="hero__member hb__pad" hidden></div>
+    </div>
+  </section>
+
+  <!-- Varianta L. Depozitul (fosta G): fotografie reală, iar sub ea un panou alb care urcă peste poză, cu căutarea și contul de firmă -->
+  <section class="hero hero--search hero--photo hero--l" data-hero="l" aria-labelledby="he-title">
+    <div class="hp__scene">
+      <img src="img/photo/depozit.webp" alt="" width="900" height="1118" fetchpriority="high" style="object-position:50% 30%">
+      <div class="hb__pad hp__text">
+        <h1 class="hp__title" id="he-title">Papetărie și birotică pentru firme</h1>
+        <p class="hp__lead">Peste 300 de branduri în depozitul nostru. Comanzi azi, primești în <span class="nowrap">24-48 de ore</span>.</p>
+      </div>
+    </div>
+    <div class="hp__sheet">
+      <div class="hb__search"></div>
+      <ul class="he__chips" aria-label="Căutate des">
+        <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+        <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      </ul>
+      <div class="hero__guest hb__pad">
+        <div class="hp__b2b">
+          <p class="hp__b2b-title">Cumperi pentru firmă?</p>
+          <p class="hp__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</p>
+          <p class="hp__b2b-actions">
+            <a class="hp__b2b-cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont</a>
+            <a class="hp__b2b-login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </div>
+      </div>
+      <div class="hero__member hb__pad" hidden></div>
+    </div>
+  </section>
+
+  <!-- Varianta I. Bibliorafturi: o fotografie care spune imediat „birou”, în portocaliul brandului -->
+  <section class="hero hero--search hero--photo hero--i" data-hero="i" aria-labelledby="he-title">
+    <div class="hp__scene">
+      <img src="img/photo/bibliorafturi.webp" alt="" width="860" height="933" fetchpriority="high" style="object-position:60% 50%">
+      <div class="hb__pad hp__text">
+        <h1 class="hp__title" id="he-title">Papetărie și birotică pentru firme</h1>
+        <p class="hp__lead">Peste 300 de branduri din stoc propriu, livrate în <span class="nowrap">24-48 de ore</span>. Clienții ne dau nota 4,9 din&nbsp;5.</p>
+      </div>
+    </div>
+    <div class="hp__sheet">
+      <div class="hb__search"></div>
+      <ul class="he__chips" aria-label="Căutate des">
+        <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+        <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      </ul>
+      <div class="hero__guest hb__pad">
+        <div class="hp__b2b">
+          <p class="hp__b2b-title">Cumperi pentru firmă?</p>
+          <p class="hp__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</p>
+          <p class="hp__b2b-actions">
+            <a class="hp__b2b-cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont</a>
+            <a class="hp__b2b-login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </div>
+      </div>
+      <div class="hero__member hb__pad" hidden></div>
+    </div>
+  </section>
+
+  <!-- Varianta J. Depozitul cu produse reale: produsele „ies din raft” peste fotografie, ca să fie clar ce e în depozit -->
+  <section class="hero hero--search hero--photo hero--j" data-hero="j" aria-labelledby="he-title">
+    <div class="hp__scene hp__scene--strip">
+      <img src="img/photo/depozit.webp" alt="" width="900" height="1118" fetchpriority="high" style="object-position:50% 30%">
+      <div class="hb__pad hp__text">
+        <h1 class="hp__title" id="he-title">Papetărie și birotică pentru firme</h1>
+        <p class="hp__lead">Peste 300 de branduri în depozitul nostru. Comanzi azi, primești în <span class="nowrap">24-48 de ore</span>.</p>
+      </div>
+    </div>
+    <div class="hp__sheet">
+      <ul class="hp__strip" data-list="hp_raft" data-list-name="Homepage - Din raft" aria-label="Produse din stoc"></ul>
+      <div class="hb__search"></div>
+      <ul class="he__chips" aria-label="Căutate des">
+        <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+        <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      </ul>
+      <div class="hero__guest hb__pad">
+        <div class="hp__b2b">
+          <p class="hp__b2b-title">Cumperi pentru firmă?</p>
+          <p class="hp__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</p>
+          <p class="hp__b2b-actions">
+            <a class="hp__b2b-cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont</a>
+            <a class="hp__b2b-login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </div>
+      </div>
+      <div class="hero__member hb__pad" hidden></div>
+    </div>
+  </section>
+
+  <!-- Varianta K. Magazinul: un om real între rafturi de birotică -->
+  <section class="hero hero--search hero--photo hero--k" data-hero="k" aria-labelledby="he-title">
+    <div class="hp__scene">
+      <img src="img/photo/magazin.webp" alt="" width="880" height="933" fetchpriority="high" style="object-position:45% 30%">
+      <div class="hb__pad hp__text">
+        <h1 class="hp__title" id="he-title">Papetărie și birotică pentru firme</h1>
+        <p class="hp__lead">Peste 300 de branduri din stoc propriu, livrate în <span class="nowrap">24-48 de ore</span>. Clienții ne dau nota 4,9 din&nbsp;5.</p>
+      </div>
+    </div>
+    <div class="hp__sheet">
+      <div class="hb__search"></div>
+      <ul class="he__chips" aria-label="Căutate des">
+        <li><a class="he__chip he__chip--new" href="https://www.officedirect.ro/produse-din-hartie/agende-birou">Nou: Agende 2027</a></li>
+        <li><a class="he__chip" href="categorie.html?fmt=A4">Hârtie A4</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=toner%20hp">Toner HP</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=biblioraft">Biblioraft</a></li>
+        <li><a class="he__chip" href="https://www.officedirect.ro/index.php?route=product/search&amp;search=prosop%20hartie">Prosop hârtie</a></li>
+      </ul>
+      <div class="hero__guest hb__pad">
+        <div class="hp__b2b">
+          <p class="hp__b2b-title">Cumperi pentru firmă?</p>
+          <p class="hp__b2b-text">Factură pe CUI, plată prin OP și prețuri mai mici la cantitate.</p>
+          <p class="hp__b2b-actions">
+            <a class="hp__b2b-cta" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont</a>
+            <a class="hp__b2b-login" href="https://www.officedirect.ro/index.php?route=account/login">Am deja cont</a>
+          </p>
+        </div>
+      </div>
+      <div class="hero__member hb__pad" hidden></div>
+    </div>
+  </section>
+
+  <!-- Varianta H. Lista de birou: un coș de pornire cu produse și prețuri reale, adăugat dintr-un tap -->
+  <section class="hero hero--search hero--h" data-hero="h" aria-labelledby="he-title">
+    <div class="hb__pad">
+      <h1 class="hx__title" id="he-title">Papetărie și birotică pentru firme</h1>
+      <p class="he__lead">Peste 300 de branduri din stoc propriu, livrate în <span class="nowrap">24-48 de ore</span>. Clienții ne dau nota 4,9 din&nbsp;5.</p>
+    </div>
+    <div class="hb__search"></div>
+    <div class="hb__pad">
+      <article class="kit" aria-labelledby="kit-title">
+        <h2 class="kit__title" id="kit-title">Lista de birou pentru o lună</h2>
+        <p class="kit__sub">Pentru un birou de 10 oameni. O poți modifica în coș.</p>
+        <ul class="kit__lines" data-list="hp_lista_birou" data-list-name="Homepage - Lista de birou"></ul>
+        <p class="kit__total"><span>Total cu TVA</span><b class="kit__sum"></b></p>
+        <button class="btn btn--primary btn--block" type="button" data-kit>Pune lista în coș</button>
+      </article>
+    </div>
+    <div class="hero__guest hb__pad"><a class="hx__b2b" href="https://www.officedirect.ro/index.php?route=account/register"><span><b>Cumperi pentru firmă?</b> Factură pe CUI, plată prin OP și prețuri de volum.</span><span class="hx__b2b-cta">Creează cont de firmă<i class="ph ph-arrow-right" aria-hidden="true"></i></span></a></div>
+    <div class="hero__member hb__pad" hidden></div>
+  </section>
+
+  <ul class="perks" aria-label="Livrare și retur">
+    <li><button type="button" data-open="sheet-livrare" aria-haspopup="dialog"><i class="ph ph-truck" aria-hidden="true"></i><b>Livrare gratuită</b><span>de la 300&nbsp;lei</span></button></li>
+    <li><button type="button" data-open="sheet-livrare" aria-haspopup="dialog"><i class="ph ph-arrow-u-up-left" aria-hidden="true"></i><b>Retur în 30 de zile</b><span>gratuit sub 10&nbsp;kg</span></button></li>
+  </ul>
+
+  <!-- Categorii rapide: toate vizibile deodată, drum scurt spre catalog (M.004, M.175) -->
+  <section class="quick" aria-labelledby="quick-title">
+    <h2 class="sr-only" id="quick-title">Categorii</h2>
+    <ul class="quick__grid">
+      <li><a href="categorie.html"><span class="quick__img"><img src="img/cut/xerox-premier.webp" alt="" width="304" height="439"></span>Hârtie</a></li>
+      <li><a href="https://www.officedirect.ro/organizare-si-arhivare"><span class="quick__img"><img src="img/cut/biblioraft-75-culori.webp" alt="" width="437" height="226"></span>Arhivare</a></li>
+      <li><a href="https://www.officedirect.ro/cartuse-imprimanta-originale"><span class="quick__img"><img src="img/p/cartus.webp" alt="" width="72" height="72"></span>Cartușe</a></li>
+      <li><a href="https://www.officedirect.ro/curatenie-si-protocol"><span class="quick__img"><img src="img/cut/prosop.webp" alt="" width="326" height="434"></span>Curățenie</a></li>
+      <li><a href="https://www.officedirect.ro/instrumente-de-scris"><span class="quick__img"><img src="img/cut/marker-pilot.webp" alt="" width="447" height="264"></span>Scris</a></li>
+      <li><a href="https://www.officedirect.ro/sisteme-de-afisare"><span class="quick__img"><img src="img/cut/nou-tabla-90.webp" alt="" width="350" height="272"></span>Afișare</a></li>
+      <li><a href="https://www.officedirect.ro/accesorii-pentru-birou"><span class="quick__img"><img src="img/cut/capse.webp" alt="" width="391" height="254"></span>Accesorii</a></li>
+      <li><a href="https://www.officedirect.ro/index-produse-papetarie"><span class="quick__img quick__img--all"><i class="ph ph-squares-four" aria-hidden="true"></i></span>Toate</a></li>
+    </ul>
+  </section>
+
+  <!-- Văzute recent (constatarea 03, M.176). Demo: ?revine=1 -->
+  <section class="section resume" id="resume" aria-labelledby="resume-title" hidden>
+    <div class="sec-head">
+      <h2 class="h2" id="resume-title">Văzute recent</h2>
+      <button class="text-btn" type="button" id="resume-clear" aria-label="Șterge produsele văzute recent">Șterge</button>
+    </div>
+    <ul class="resume__list" id="resume-list" data-list="hp_reluare" data-list-name="Homepage - Văzute recent"></ul>
+  </section>
+
+  <!-- Noutăți: campania lunii + produsele noi, măsurate pe SKU și poziție -->
+  <section class="section new" id="noutati" aria-labelledby="new-title">
+    <div class="sec-head pad">
+      <h2 class="h2 reveal-y" id="new-title">Nou în catalog</h2>
+      <a class="link" href="https://www.officedirect.ro/" data-proto="noutati" aria-label="Vezi toate produsele noi">Vezi toate</a>
+    </div>
+    <p class="sec-note pad" id="new-note">Intrate în catalog în ultimele 90 de zile</p>
+    <a class="campaign" id="feature" href="https://www.officedirect.ro/produse-din-hartie/agende-birou" data-promo="hp_noutati_slot1" data-promo-name="Agende și calendare 2027">
+      <img class="campaign__img" src="img/photo/agende.webp" alt="" width="700" height="1050" loading="lazy">
+      <span class="campaign__body">
+        <span class="campaign__kicker">Pentru 2027</span>
+        <span class="campaign__title">Agende și calendare de birou</span>
+        <span class="campaign__text">Calendar triptic de birou de&nbsp;la <b data-price-inline="nou-calendar"></b></span>
+        <span class="campaign__cta">Vezi colecția<i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+      </span>
+    </a>
+    <div class="rail-wrap">
+      <ul class="rail" id="new-rail" data-list="hp_noutati" data-list-name="Homepage - Nou în catalog" tabindex="0" aria-label="Produse noi" aria-describedby="new-note"></ul>
+      <span class="rail__progress" aria-hidden="true"><span></span></span>
+    </div>
+  </section>
+
+  <!-- Reaprovizionare pe categoriile care vând cel mai bine (constatarea 06; M.005, M.010, M.178) -->
+  <section class="section ess" id="esentiale" aria-labelledby="ess-title">
+    <div class="sec-head pad">
+      <h2 class="h2 reveal-y" id="ess-title">Cele mai cumpărate</h2>
+      <a class="link" id="ess-more" href="https://www.officedirect.ro/">Vezi toate</a>
+    </div>
+    <p class="sec-note pad" id="ess-note">După bucățile vândute în ultimele 30 de zile</p>
+    <div class="tabs" role="tablist" aria-label="Categorii de produse de bază" id="ess-tabs">
+      <span class="tabs__ink" aria-hidden="true"></span>
+    </div>
+    <div id="ess-panel" role="tabpanel" aria-labelledby="tab-hartie">
+      <ul class="rail" id="ess-rail" tabindex="0" aria-label="Produse de bază" aria-describedby="ess-note"></ul>
+      <span class="rail__progress" aria-hidden="true"><span></span></span>
+    </div>
+  </section>
+
+  <!-- Pentru firme: obiectivul de business, cu praguri reale de volum (constatările 02, 27; H-18, H-20, H-24) -->
+  <section class="b2b" id="firme" aria-labelledby="b2b-title">
+    <figure class="b2b__media" aria-hidden="true"><img src="img/photo/firme.webp" alt="" width="900" height="1350" loading="lazy"></figure>
+    <div class="b2b__body">
+      <p class="kicker kicker--dark"><span class="spark" aria-hidden="true"></span>Pentru firme</p>
+      <h2 class="b2b__title reveal-y" id="b2b-title">Ce primești cu un cont de firmă</h2>
+      <ul class="b2b__list">
+        <li><i class="ph ph-receipt" aria-hidden="true"></i><span><b>Factură pe datele firmei</b>Completezi CUI-ul o singură dată, în cont.</span></li>
+        <li><i class="ph ph-bank" aria-hidden="true"></i><span><b>Plată prin ordin de plată</b>Sau card, ori ramburs fără taxă până la 5.000&nbsp;lei.</span></li>
+        <li><i class="ph ph-stack" aria-hidden="true"></i><span><b>Prețuri de volum</b>Prețul pe bucată scade de la cantitățile afișate pe produs.</span></li>
+        <li><i class="ph ph-users-three" aria-hidden="true"></i><span><b>Agent client dedicat</b>Și liste de favorite pe care le împarți cu colegii.</span></li>
+      </ul>
+      <div class="tier" aria-labelledby="tier-title">
+        <div class="tier__head">
+          <img src="img/cut/biblioraft-5.webp" alt="" width="429" height="267" loading="lazy">
+          <p><b id="tier-title">Exemplu: Biblioraft A4, 5 cm, Accenta</b>Preț pe bucată, după cantitate</p>
+        </div>
+        <table class="tier__table">
+          <thead><tr><th scope="col">Cantitate</th><th scope="col">Cu TVA</th><th scope="col">Fără TVA</th><th scope="col">Economie</th></tr></thead>
+          <tbody id="tier-rows"></tbody>
+        </table>
+      </div>
+      <a class="btn btn--light btn--block" href="https://www.officedirect.ro/index.php?route=account/register">Creează cont de firmă</a>
+    </div>
+  </section>
+
+  <!-- Soluții pe nevoi, nu doar pe categorii (M.175) -->
+  <section class="section solve" aria-labelledby="solve-title">
+    <h2 class="h2 reveal-y" id="solve-title">Pentru fiecare zonă a biroului</h2>
+    <div class="solve__grid">
+      <a class="solve__tile solve__tile--tall" href="https://www.officedirect.ro/organizare-si-arhivare">
+        <img src="img/photo/arhiva.webp" alt="" width="540" height="671" loading="lazy">
+        <span class="solve__text"><b>Arhivă în ordine</b>Bibliorafturi, dosare, cutii</span>
+      </a>
+      <a class="solve__tile" href="https://www.officedirect.ro/curatenie-si-protocol">
+        <img src="img/photo/pantry.webp" alt="" width="600" height="400" loading="lazy">
+        <span class="solve__text"><b>Bucătărie și protocol</b>Prosoape, servețele, igienă</span>
+      </a>
+      <a class="solve__tile" href="https://www.officedirect.ro/sisteme-de-afisare">
+        <img src="img/photo/whiteboard.webp" alt="" width="600" height="400" loading="lazy">
+        <span class="solve__text"><b>Sala de ședințe</b>Table, markere, flipchart</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Cartușe și toner după cod sau imprimantă (constatarea 26) -->
+  <section class="section finder" aria-labelledby="finder-title">
+    <div class="finder__head">
+      <div><h2 class="h2" id="finder-title">Cartușe și toner</h2></div>
+      <img src="img/p/cartus.webp" alt="" width="72" height="72" loading="lazy">
+    </div>
+    <form class="finder__form" action="cautare.html" method="get">
+      <label class="field__label" for="printer">Codul cartușului sau modelul imprimantei</label>
+      <div class="field">
+        <input class="field__input" id="printer" name="q" type="search" placeholder="ex. TN-B023, HP 207A" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="search">
+        <button class="btn btn--primary" type="submit">Caută</button>
+      </div>
+    </form>
+    <p class="finder__links">
+      <a class="link" href="https://www.officedirect.ro/cartuse-imprimanta-originale">Cartușe originale</a>
+      <a class="link" href="https://www.officedirect.ro/cartuse-compatibile-inkjet">Cartușe compatibile</a>
+    </p>
+  </section>
+
+  <!-- Încredere (constatarea 05, M.174, M.177). Nota NPS se afișează doar cu acordul OfficeDirect. -->
+  <section class="section trust" aria-labelledby="trust-title">
+    <h2 class="h2 reveal-y" id="trust-title">Ce apreciază clienții la noi</h2>
+    <ul class="praise">
+      <li><i class="ph ph-lightning" aria-hidden="true"></i>Livrarea rapidă</li>
+      <li><i class="ph ph-package" aria-hidden="true"></i>Produsele bine ambalate</li>
+      <li><i class="ph ph-phone" aria-hidden="true"></i>Oameni reali la telefon și pe chat</li>
+    </ul>
+    <a class="cert" href="https://trusted.ro/assets/verify.php?id=b1a59b315fc9a3002ce38bbe070ec3f5" rel="noopener" target="_blank"><i class="ph ph-seal-check" aria-hidden="true"></i><span>Magazin verificat TRUSTED.ro</span></a>
+  </section>
+
+  <!-- Branduri cu link spre pagina fiecăruia (constatarea 07, H-13) -->
+  <section class="brands" aria-labelledby="brands-title">
+    <div class="sec-head pad">
+      <h2 class="h3" id="brands-title">Branduri în catalog</h2>
+      <a class="link" href="https://www.officedirect.ro/index.php?route=product/manufacturer">Toate brandurile</a>
+    </div>
+    <ul class="brands__grid">
+      <li><a href="https://www.officedirect.ro/xerox"><img src="img/b/mono-xerox-pagina-brand.png" alt="Xerox" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/pilot"><img src="img/b/mono-pilot.png" alt="Pilot" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/bic"><img src="img/b/mono-bic-logo-brand.png" alt="BIC" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/leitz"><img src="img/b/mono-leitz-logo.png" alt="Leitz" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/accenta"><img src="img/b/mono-logo-accenta-png.png" alt="Accenta" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/kangaro"><img src="img/b/mono-kangaro.png" alt="Kangaro" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/mondi"><img src="img/b/mono-mondi-logo.png" alt="Mondi" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/fellowes"><img src="img/b/mono-fellowes-pagina-brand.png" alt="Fellowes" loading="lazy"></a></li>
+      <li><a href="https://www.officedirect.ro/noki"><img src="img/b/mono-noki-pt-pagina-brand.png" alt="Noki" loading="lazy"></a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot__help">
+    <p class="foot__title">Te ajutăm cu comanda</p>
+    <p class="foot__hours">Luni-vineri, 8:30-17:30</p>
+    <div class="foot__phones">
+      <a href="tel:0213303454"><i class="ph ph-phone" aria-hidden="true"></i>021&nbsp;330&nbsp;34&nbsp;54</a>
+      <a href="tel:0722510243"><i class="ph ph-device-mobile" aria-hidden="true"></i>0722&nbsp;510&nbsp;243</a>
+    </div>
+  </div>
+  <nav class="foot__nav" aria-label="Informații utile">
+    <div>
+      <p class="foot__head">Comenzi</p>
+      <ul><li><a href="https://www.officedirect.ro/livrare">Livrare</a></li><li><a href="https://www.officedirect.ro/plata">Plată</a></li><li><a href="https://www.officedirect.ro/politica-de-retur">Retur</a></li><li><a href="https://www.officedirect.ro/index.php?route=product/special">Oferte</a></li></ul>
+    </div>
+    <div>
+      <p class="foot__head">Pentru firme</p>
+      <ul><li><a href="https://www.officedirect.ro/index.php?route=account/register">Cont de firmă</a></li><li><a href="https://www.officedirect.ro/index.php?route=account/wishlists">Liste de favorite</a></li><li><a href="https://www.officedirect.ro/index.php?route=account/order">Comenzile mele</a></li></ul>
+    </div>
+    <div>
+      <p class="foot__head">OfficeDirect</p>
+      <ul><li><a href="https://www.officedirect.ro/despre-noi">Despre noi</a></li><li><a href="https://www.officedirect.ro/blog/articole">Blog</a></li><li><a href="https://www.officedirect.ro/cariere">Cariere</a></li><li><a href="https://www.officedirect.ro/contact">Contact</a></li></ul>
+    </div>
+  </nav>
+  <div class="foot__legal">
+    <p class="foot__links">
+      <a href="https://www.officedirect.ro/termeni-si-conditii-ro">Termeni și condiții</a>
+      <a href="https://www.officedirect.ro/politica-de-confidentialitate">Confidențialitate</a>
+      <a href="https://www.officedirect.ro/politica-de-utilizare-cookie-uri">Cookie-uri</a>
+      <a href="https://www.anpc.ro/">ANPC</a>
+      <a href="https://reclamatiisal.anpc.ro/">SAL</a>
+    </p>
+    <p class="foot__company">© 2026 OfficeDirect · SOF SERVICE SRL · <span class="nowrap">CUI RO14872336</span></p>
+  </div>
+</footer>
+
+<p class="sr-only" id="sr-status" role="status" aria-live="polite"></p>
+<div class="toast" id="toast" hidden></div>
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="drawer layer" id="menu" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
+  <div class="drawer__head">
+    <p class="drawer__title" id="menu-title">Meniu</p>
+    <button class="icon-btn" type="button" data-close aria-label="Închide meniul"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </div>
+  <nav class="drawer__nav" aria-label="Categorii">
+    <a href="https://www.officedirect.ro/produse-din-hartie">Produse din hârtie</a>
+    <a href="https://www.officedirect.ro/organizare-si-arhivare">Organizare și arhivare</a>
+    <a href="https://www.officedirect.ro/curatenie-si-protocol">Curățenie și protocol</a>
+    <a href="https://www.officedirect.ro/sisteme-de-afisare">Sisteme de afișare</a>
+    <a href="https://www.officedirect.ro/cartuse-imprimanta-originale">Cartușe și toner</a>
+    <a href="https://www.officedirect.ro/instrumente-de-scris">Instrumente de scris</a>
+    <a href="https://www.officedirect.ro/accesorii-pentru-birou">Accesorii pentru birou</a>
+    <a href="https://www.officedirect.ro/tehnica-de-birou">Tehnică de birou</a>
+    <a href="https://www.officedirect.ro/accesorii-it">Accesorii IT</a>
+    <a href="https://www.officedirect.ro/rechizite-scolare">Rechizite școlare</a>
+  </nav>
+  <nav class="drawer__sub" aria-label="Informații">
+    <a href="#firme" data-close><i class="ph ph-buildings" aria-hidden="true"></i>Pentru firme</a>
+    <a href="#noutati" data-close><i class="ph ph-sparkle" aria-hidden="true"></i>Nou în catalog</a>
+    <a href="https://www.officedirect.ro/index.php?route=product/special"><i class="ph ph-tag" aria-hidden="true"></i>Oferte</a>
+    <a href="https://www.officedirect.ro/livrare"><i class="ph ph-truck" aria-hidden="true"></i>Livrare și retur</a>
+    <a href="https://www.officedirect.ro/index.php?route=account/wishlists"><i class="ph ph-heart" aria-hidden="true"></i>Liste de favorite</a>
+    <a href="#" data-open="sheet-ajutor"><i class="ph ph-chat-circle-dots" aria-hidden="true"></i>Ajutor: telefon și chat</a>
+    <a href="https://www.officedirect.ro/contact"><i class="ph ph-phone" aria-hidden="true"></i>Contact</a>
+  </nav>
+</div>
+
+<section class="sheet layer" id="sheet-livrare" role="dialog" aria-modal="true" aria-labelledby="sl-title" hidden>
+  <div class="sheet__grip" aria-hidden="true"></div>
+  <div class="sheet__head"><h2 class="sheet__title" id="sl-title">Livrare, plată și retur</h2><button class="icon-btn" type="button" data-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+  <dl class="facts">
+    <div><dt>Livrare gratuită</dt><dd>De la 200&nbsp;lei în București, 300&nbsp;lei în țară și 100&nbsp;lei la locker.</dd></div>
+    <div><dt>Termen</dt><dd>24-48 de ore. Data exactă o vezi înainte să plasezi comanda.</dd></div>
+    <div><dt>Plată</dt><dd>Ordin de plată, card online sau ramburs fără taxă până la 5.000&nbsp;lei.</dd></div>
+    <div><dt>Retur</dt><dd>În 30 de zile, gratuit pentru coletele sub 10&nbsp;kg.</dd></div>
+  </dl>
+  <a class="btn btn--secondary btn--block" href="https://www.officedirect.ro/livrare">Toate condițiile de livrare</a>
+</section>
+
+<section class="sheet layer" id="sheet-cos" role="dialog" aria-modal="true" aria-labelledby="sc-title" hidden>
+  <div class="sheet__grip" aria-hidden="true"></div>
+  <div class="sheet__head"><h2 class="sheet__title" id="sc-title">Coșul tău</h2><button class="icon-btn" type="button" data-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+  <div id="cart-body"></div>
+</section>
+
+<!-- Alegerea variantei înainte de adăugare (M.029, PLP-28) -->
+<section class="sheet layer" id="sheet-varianta" role="dialog" aria-modal="true" aria-labelledby="sv-title" hidden>
+  <div class="sheet__grip" aria-hidden="true"></div>
+  <div class="sheet__head"><h2 class="sheet__title" id="sv-title">Alege culoarea</h2><button class="icon-btn" type="button" data-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+  <div id="variant-body"></div>
+</section>
+
+<section class="sheet layer" id="sheet-ajutor" role="dialog" aria-modal="true" aria-labelledby="sa-title" hidden>
+  <div class="sheet__grip" aria-hidden="true"></div>
+  <div class="sheet__head"><h2 class="sheet__title" id="sa-title">Cu ce te putem ajuta?</h2><button class="icon-btn" type="button" data-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+  <p class="sheet__text">Un coleg îți răspunde luni-vineri, între 8:30 și 17:30.</p>
+  <button class="btn btn--dark btn--block" type="button" data-close data-proto="chat"><i class="ph ph-chat-circle-dots" aria-hidden="true"></i>Scrie-ne pe chat</button>
+  <a class="btn btn--secondary btn--block" href="tel:0213303454"><i class="ph ph-phone" aria-hidden="true"></i>021&nbsp;330&nbsp;34&nbsp;54</a>
+</section>
+
+<aside class="debug" id="debug" hidden aria-label="Evenimente GA4 trimise (prototip)">
+  <p class="debug__title">dataLayer · evenimente GA4</p>
+  <ol class="debug__list" id="debug-list"></ol>
+</aside>
+
+</body>
+</html>
