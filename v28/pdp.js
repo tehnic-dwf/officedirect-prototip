@@ -228,6 +228,16 @@ function totalHTML() {
     <p class="ptotal__sub">Total ${vatLabel()}${saved > 0 ? ` · <span class="ptotal__save">plătești cu ${lei(round2(qty * (vatPrice(base) - vatPrice(u))))} mai puțin la prețul de volum</span>` : ''}</p>
     ${next ? `<button class="ptotal__next" type="button" data-tier="${next[0]}">Încă ${cate(next[0] - qty, many)} și plătești ${pLei(next[1])}/${one}<span>Pune ${next[0]} în coș: plătești cu ${lei(round2(next[0] * (vatPrice(u) - vatPrice(next[1]))))} mai puțin</span></button>` : ''}`;
 }
+// Disponibilitatea stă lângă buton (obiectivul: „prețul, disponibilitatea și condițiile nu se ascund”); detaliile de livrare rămân mai jos
+function availHTML() {
+  if (p.avail === 'furnizor') return `<p class="pavail pavail--wait"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span><b>Se aduce de la furnizor</b> · data o vezi înainte să plasezi comanda</span></p>`;
+  const low = p.stock > 0 && p.stock <= LOW_STOCK;
+  return `<p class="pavail${low || p.avail === 'limitat' ? ' pavail--low' : ''}"><i class="ph ph-check-circle" aria-hidden="true"></i><span><b>${low ? `Ultimele ${p.stock} în stoc` : p.avail === 'limitat' ? 'Stoc limitat' : 'În stoc'}</b> · ajunge ${deliveryDate()}</span></p>`;
+}
+// Salvarea în listă: acțiune secundară, sub cumpărare (mov, nu portocaliu); ia culoarea și cantitatea alese acum
+const saveLabel = () => { const n = listOf(pid).length; return `<i class="ph ph-heart" aria-hidden="true"></i>${n ? `Salvat în ${n === 1 ? 'listă' : n + ' liste'} · schimbă` : 'Salvează în listă'}`; };
+document.addEventListener('click', e => { const b = e.target.closest('.psave'); if (b) { b.dataset.saveColor = color || ''; b.dataset.saveQ = qty; } }, true);
+hooks.lists.push(() => { const b = $('.psave'); if (b) { b.innerHTML = saveLabel(); b.setAttribute('aria-pressed', listOf(pid).length > 0); } });
 function inCartHTML() {
   const n = qtyOf(pid);
   return n ? `<i class="ph ph-check-circle" aria-hidden="true"></i><span>Ai ${n} în coș</span><a href="#" data-open="sheet-cos">Vezi coșul</a>` : '';
@@ -239,6 +249,7 @@ function renderBuy() {
     ${out ? `<div class="pout"><p class="pout__title">Stoc epuizat</p><p class="pout__text">Îți scriem pe email când revine.</p>
       <button class="btn btn--secondary btn--block" type="button" data-notify="${pid}"><i class="ph ph-bell" aria-hidden="true"></i>Anunță-mă când revine</button>
       ${$('#alt-rail').children.length ? '<a class="link" href="#alt-sec">Vezi alternative în stoc</a>' : ''}</div>` : `
+    ${availHTML()}
     ${colorsHTML()}
     ${tiersHTML()}
     <div class="pbuy">
@@ -250,6 +261,7 @@ function renderBuy() {
       <button class="btn btn--primary" type="button" id="pb-add">Adaugă în coș</button>
     </div>
     <div class="ptotal" id="ptotal" aria-live="polite">${totalHTML()}</div>`}
+    <button class="psave" type="button" data-save="${pid}" aria-pressed="${listOf(pid).length > 0}">${saveLabel()}</button>
     <p class="pincart" id="pincart" ${qtyOf(pid) ? '' : 'hidden'}>${inCartHTML()}</p>`;
   renderVatSwitches();
   updateBar();

@@ -217,7 +217,7 @@ ul, ol { padding: 0; list-style: none; }
 .again__link { display: flex; align-items: center; justify-content: center; min-height: 44px; font-size: 15px; font-weight: 600; color: var(--secondary); text-decoration: none; }
 
 /* ---------- Variante de prim ecran (?hero=a|b|c|d); scriptul din <head> alege una ---------- */
-html:not(.hv-a) [data-hero="a"], html:not(.hv-b) [data-hero="b"], html:not(.hv-c) [data-hero="c"], html:not(.hv-d) [data-hero="d"], html:not(.hv-e) [data-hero="e"], html:not(.hv-f) [data-hero="f"], html:not(.hv-g) [data-hero="g"], html:not(.hv-h) [data-hero="h"], html:not(.hv-i) [data-hero="i"], html:not(.hv-j) [data-hero="j"], html:not(.hv-k) [data-hero="k"], html:not(.hv-l) [data-hero="l"] { display: none !important; }
+html:not(.hv-a) [data-hero="a"], html:not(.hv-b) [data-hero="b"], html:not(.hv-c) [data-hero="c"], html:not(.hv-d) [data-hero="d"], html:not(.hv-e) [data-hero="e"], html:not(.hv-f) [data-hero="f"], html:not(.hv-g) [data-hero="g"], html:not(.hv-h) [data-hero="h"], html:not(.hv-i) [data-hero="i"], html:not(.hv-j) [data-hero="j"], html:not(.hv-k) [data-hero="k"], html:not(.hv-l) [data-hero="l"], html:not(.hv-m) [data-hero="m"], html:not(.hv-n) [data-hero="n"], html:not(.hv-o) [data-hero="o"], html:not(.hv-p) [data-hero="p"], html:not(.hv-q) [data-hero="q"], html:not(.hv-r) [data-hero="r"], html:not(.hv-s) [data-hero="s"] { display: none !important; }
 
 /* E: hibridul recomandat de council */
 .hero--e { padding: 18px 0 16px; background: linear-gradient(180deg, var(--secondary-900), #361C52); }
@@ -891,3 +891,249 @@ html:not(.hl-0) .hero--g .hp__lead, html:not(.hl-0) .hero--g .hp__rating, .hl-0 
 /* Varianta de contrast păstrează doar textul secundar mai închis; placa pozei e aceeași (albă cu contur fin) */
 html.hi-ct { --ink-3: #554B5E; }
 html.hi-ct .card__name { font-weight: 550; }
+
+/* Comanda rapidă: intrarea din căutare (mai multe coduri) și din blocul pentru firme */
+.suggest__rapid { margin: 4px 0; padding: 0 12px; border-radius: var(--r-ctl); border-bottom: 0 !important; background: var(--secondary-tint); color: var(--secondary-900); font-size: 15px; line-height: 1.35; }
+.suggest__rapid .ph { color: var(--secondary); font-size: 20px; }
+.hf2__rapid { display: grid; grid-template-columns: 24px 1fr 20px; align-items: center; gap: 10px; min-height: 52px; margin-top: 10px; padding: 8px 12px; border-radius: var(--r-ctl); background: #fff; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--ink); font-size: 15px; line-height: 1.3; text-decoration: none; }
+.hf2__rapid b { font-weight: 650; }
+.hf2__rapid .ph-lightning { font-size: 22px; color: var(--secondary); }
+.hf2__rapid .ph-arrow-right { color: var(--secondary); }
+
+/* ---------- Runda 5 (05.11.2026): M raftul, N comanda biroului, O tipografic ---------- */
+.hero--m, .hero--n, .hero--o { padding: 0; }
+.hero--m .hp__sheet, .hero--n .hp__sheet, .hero--o .hp__sheet { margin-top: -24px; }
+
+/* M: fond deschis, raft mov cu produse reale */
+.hero--m { background: linear-gradient(180deg, var(--secondary-tint) 0%, #fff 100%); color: var(--ink); }
+.hm { padding: 24px var(--gutter) 52px; }
+.hm__kicker { font-size: 14px; font-weight: 650; letter-spacing: .02em; color: var(--secondary); }
+.hm__title { margin-top: 8px; font-size: clamp(30px, 8.8vw, 36px); line-height: 1.05; font-weight: 700; letter-spacing: -.04em; text-wrap: balance; }
+.hm__shelf { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 26px; border-bottom: 0; }
+.hm__shelf a { display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 44px; font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.hm__item { position: relative; display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 82px; padding-bottom: 6px; border-bottom: 8px solid var(--secondary-900); box-shadow: 0 10px 14px -12px rgb(42 22 64 / .7); }
+.hm__shelf li:first-child .hm__item { border-radius: 0 0 0 4px; } .hm__shelf li:last-child .hm__item { border-radius: 0 0 4px 0; }
+.hm__item img { width: auto; max-width: 92%; object-fit: contain; filter: drop-shadow(0 6px 6px rgb(42 22 64 / .18)); transition: transform .3s var(--ease); }
+.hm__shelf a:active img { transform: translateY(-4px); }
+.hm__facts { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 18px; font-size: 14px; color: var(--ink-2); }
+.hm__facts span { display: inline-flex; align-items: center; gap: 6px; }
+.hm__facts .ph { font-size: 18px; color: var(--secondary); }
+
+/* N: mov închis, cardul de comandă rapidă alb */
+.hero--n { background-color: var(--secondary-900); background-image: radial-gradient(120% 80% at 100% 0%, #4A2A6E 0%, var(--secondary-900) 60%); color: #fff; }
+.hn { padding: 26px var(--gutter) 50px; }
+.hn__title { font-size: clamp(31px, 9vw, 38px); line-height: 1.03; font-weight: 700; letter-spacing: -.04em; text-wrap: balance; }
+.hn__lead { margin-top: 12px; max-width: 34ch; font-size: 16px; line-height: 1.45; color: #E4DAEE; text-wrap: pretty; }
+.hn__card { display: block; margin-top: 20px; padding: 14px 14px 4px; border-radius: 18px; background: #fff; color: var(--ink); text-decoration: none; box-shadow: 0 24px 40px -24px rgb(0 0 0 / .7); transition: transform .3s var(--ease); }
+.hn__card:active { transform: scale(.985); }
+.hn__card-head { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 650; }
+.hn__card-head .ph { font-size: 20px; color: var(--secondary); }
+.hn__rows { display: grid; margin-top: 10px; border-top: 1px solid var(--line); }
+.hn__row { display: grid; grid-template-columns: 36px auto minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.hn__row img { width: 36px; height: 36px; object-fit: contain; }
+.hn__row code { font: 600 13px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--secondary); font-variant-numeric: tabular-nums; }
+.hn__row span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ink-2); }
+.hn__row b { font-weight: 650; font-variant-numeric: tabular-nums; }
+.hn__cta { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 52px; font-size: 15px; font-weight: 650; color: var(--secondary); }
+
+/* O: tipografic, alb, cuvintele mari ca un cuprins */
+.hero--o { background: #fff; color: var(--ink); }
+.ho { padding: 22px var(--gutter) 46px; }
+.ho__kicker { font-size: 16px; line-height: 1.35; font-weight: 600; color: var(--ink-2); max-width: 30ch; text-wrap: balance; }
+.ho__words { margin-top: 12px; border-top: 1.5px solid var(--ink); }
+.ho__words a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; border-bottom: 1px solid var(--line-2);
+  font-size: clamp(36px, 11vw, 44px); line-height: 1; font-weight: 700; letter-spacing: -.045em; color: var(--ink); text-decoration: none; }
+.ho__words a::after { content: none; }
+.ho__words img { width: 52px; height: 48px; object-fit: contain; transition: transform .3s var(--ease); }
+.ho__words a:active img { transform: translateX(-6px) rotate(-4deg); }
+@media (hover: hover) { .ho__words a:hover { color: var(--secondary); } .ho__words a:hover img { transform: translateX(-6px) rotate(-4deg); } }
+.ho__proof { margin-top: 14px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.hero--n .hp__sheet { color: var(--ink); }
+/* După council: M cu produse la aceeași scară vizuală și fără fundal alb pe lavandă; N și O cu imagini și texte de încredere mai clare */
+.hm__item img { height: 60px !important; max-width: 100%; mix-blend-mode: multiply; filter: none; }
+.hm__shelf li:nth-child(2) img, .hm__shelf li:nth-child(3) img { height: 40px !important; }
+.hm__facts { font-size: 15px; color: var(--ink); }
+.hn__row { grid-template-columns: 40px auto minmax(0, 1fr) auto; }
+.hn__row img { width: 40px; height: 40px; }
+.hn__row span { color: var(--ink); font-weight: 500; }
+.ho__words img { box-sizing: border-box; width: 64px; height: 56px; padding: 6px; border-radius: 12px; background: var(--mist); mix-blend-mode: multiply; }
+.ho__proof { font-size: 16px; color: var(--ink); }
+.hero--n .hf2__title { color: var(--ink); }
+
+/* ---------- Runda 6 (05.11.2026): P sobru, Q produsul ca erou, R încrederea întâi ---------- */
+.hero--p, .hero--q, .hero--r { padding: 0; }
+sup { font-size: 13px; line-height: 0; vertical-align: super; }
+
+/* P: alb, utilitar. Titlu mic, dovada într-un rând, căutarea, apoi 8 categorii pe plăci egale */
+.hero--p { background: #fff; color: var(--ink); }
+.hpp { padding: 18px var(--gutter) 0; }
+.hpp__title { font-size: 24px; line-height: 1.15; font-weight: 700; letter-spacing: -.03em; text-wrap: balance; }
+.hpp__proof { display: flex; align-items: flex-start; gap: 6px; margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--secondary); }
+.hpp__proof .ph { flex: none; margin-top: 1px; font-size: 18px; }
+.hero--p .hp__sheet { margin-top: 0; padding-top: 14px; border-radius: 0; }
+.hpp__cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 8px; padding: 6px var(--gutter) 0; }
+.hpp__cats a { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 44px; font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.hpp__cats img, .hpp__all { box-sizing: border-box; width: 100%; aspect-ratio: 1; padding: 10px; border-radius: 16px; background: var(--mist); object-fit: contain; }
+.hpp__all { display: grid; place-items: center; font-size: 28px; color: var(--secondary); background: var(--secondary-tint); }
+.hpp__note, .hq__note, .hr__note { padding: 10px var(--gutter) 0; font-size: 13px; color: var(--ink-2); }
+.hero--p > .hero__guest { margin: 16px 0 8px; }
+
+/* Q: mov adânc, o natură moartă de birou: toate produsele pe aceeași „masă”, aceeași umbră, suprapuse ca într-o fotografie */
+.hero--q { background-color: var(--secondary-900); background-image: radial-gradient(90% 60% at 70% 72%, #5A3585 0%, rgb(42 22 64 / 0) 70%); color: #fff; }
+.hq { padding: 22px var(--gutter) 34px; }
+.hq__kicker { font-size: 14px; font-weight: 600; color: #E4DAEE; }
+.hq__title { margin-top: 8px; font-size: clamp(29px, 8.6vw, 35px); line-height: 1.05; font-weight: 700; letter-spacing: -.04em; text-wrap: balance; }
+.hq__still { position: relative; height: 196px; margin: 18px -4px 0; }
+.hq__still::after { content: ""; position: absolute; left: -16px; right: -16px; bottom: 6px; height: 2px; background: linear-gradient(90deg, transparent, rgb(255 255 255 / .28) 15%, rgb(255 255 255 / .28) 85%, transparent); }
+.hq__i { position: absolute; bottom: 8px; width: auto; object-fit: contain; filter: drop-shadow(0 14px 10px rgb(10 4 20 / .55)) drop-shadow(0 2px 2px rgb(10 4 20 / .4)); }
+.hq__i--paper { left: 2%; height: 176px; z-index: 1; }
+.hq__i--ream { left: 6%; height: 156px; z-index: 2; }
+.hq__i--roll { right: 4%; height: 134px; z-index: 1; }
+.hq__i--bind { left: 36%; height: 74px; z-index: 3; }
+.hq__i--toner { right: 26%; height: 70px; z-index: 4; }
+.hq__i--tape { right: 0; height: 64px; z-index: 5; }
+.hq__i--marker { left: 2%; height: 40px; z-index: 6; bottom: 6px; transform: rotate(-8deg); }
+.hq__note { padding: 6px 0 0; color: #CFC3DD; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .hq__i { animation: hq-in .9s cubic-bezier(.16, 1, .3, 1) both; }
+  .js .hq__i--ream { animation-delay: .06s; } .js .hq__i--roll { animation-delay: .1s; } .js .hq__i--bind { animation-delay: .16s; }
+  .js .hq__i--toner { animation-delay: .2s; } .js .hq__i--tape { animation-delay: .24s; } .js .hq__i--marker { animation-delay: .3s; }
+}
+@keyframes hq-in { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+.hero--q .hp__sheet { color: var(--ink); }
+
+/* R: alb, editorial. Promisiunea mare, trei dovezi cu iconițe, apoi căutarea */
+.hero--r { background: linear-gradient(180deg, #fff 0%, var(--mist) 100%); color: var(--ink); }
+.hr { padding: 22px var(--gutter) 40px; }
+.hr__title { font-size: clamp(28px, 8.4vw, 34px); line-height: 1.08; font-weight: 700; letter-spacing: -.035em; text-wrap: balance; }
+.hr__accent { color: var(--secondary); }
+.hr__proofs { display: grid; gap: 2px; margin-top: 18px; border-top: 1px solid var(--line-2); }
+.hr__proofs li { display: grid; grid-template-columns: 36px 1fr; align-items: center; gap: 12px; min-height: 56px; padding: 6px 0; border-bottom: 1px solid var(--line-2); font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+.hr__proofs b { color: var(--ink); font-weight: 650; }
+.hr__proofs .ph { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--secondary-tint); color: var(--secondary); font-size: 20px; }
+.hr__note { padding: 8px 0 0; }
+
+.hpp .hpp__note { padding: 2px 0 0 24px; }
+.hq__kicker { font-size: 13px; }
+.hq__still { height: 168px; margin-top: 14px; }
+
+/* ---------- S (09.11.2026): hibridul. Fotografia curată sus (fără strat peste ea), titlul pe mov dedesubt, dovezile într-un rând,
+   apoi căutarea și categoriile. Textul nu stă pe fotografie, deci contrastul nu depinde de poză. ---------- */
+.hero--s { padding: 0; background: #fff; color: var(--ink); }
+.hs { position: relative; background: var(--secondary-900); color: #fff; }
+.hs__photo { position: relative; height: 188px; overflow: hidden; }
+.hs__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Doar marginea de jos se topește în mov, ca fotografia să intre în bandă fără linie dură */
+.hs__photo::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: linear-gradient(180deg, rgb(42 22 64 / 0), var(--secondary-900)); }
+.hs__text { position: relative; margin-top: -18px; padding: 0 var(--gutter); }
+.hs__title { max-width: 18ch; font-size: clamp(26px, 7.4vw, 29px); line-height: 1.07; font-weight: 700; letter-spacing: -.035em; text-wrap: balance; }
+.hs__proofs { display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 12px; padding: 12px var(--gutter) 32px; }
+.hs__proofs li { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; }
+.hs__proofs .ph { font-size: 16px; color: #CDB8E6; }
+.hero--s .hp__sheet { margin-top: -22px; color: var(--ink); }
+.hs__cats { padding-top: 4px; }
+.hero--s > .hero__guest { margin: 18px 0 8px; }
+@media (max-width: 340px) { .hs__photo { height: 160px; } .hs__proofs li { gap: 3px; } .hs__proofs .ph { display: none; } }
+/* P și S au categoriile în primul ecran: secțiunea „Categorii” de mai jos ar fi a doua oară aceleași 8 categorii */
+.hv-p .quick, .hv-s .quick { display: none; }
+
+/* ---------- Meniul (09.11.2026): scurtături, categorii cu subcategorii, cont și ajutor ---------- */
+.mnav { padding-bottom: 24px; }
+.mnav__short { display: grid; gap: 6px; padding: 4px 12px 16px; border-bottom: 8px solid var(--mist); }
+.mnav__short a { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 12px; min-height: 60px; padding: 8px 10px; border-radius: var(--r-ctl); background: var(--secondary-tint); color: var(--ink); text-decoration: none; }
+.mnav__short a[aria-current] { box-shadow: inset 0 0 0 1.5px var(--secondary); }
+.mnav__short .ph { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #fff; color: var(--secondary); font-size: 22px; }
+.mnav__short b { display: block; font-size: 16px; font-weight: 650; }
+.mnav__short span { font-size: 13px; line-height: 1.35; color: var(--ink-2); }
+.mnav__label { padding: 18px var(--gutter) 6px; font-size: 13px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.mnav__cat { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; padding: 0 var(--gutter); border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--ink); font: inherit; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer; }
+.mnav__cat .ph { color: var(--ink-3); transition: transform .2s var(--ease); }
+.mnav__cat[aria-expanded="true"] { color: var(--secondary); border-bottom-color: transparent; }
+.mnav__cat[aria-expanded="true"] .ph { transform: rotate(180deg); color: var(--secondary); }
+.mnav__sub { padding: 0 0 10px; background: var(--mist); border-bottom: 1px solid var(--line); }
+.mnav__sub a { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 var(--gutter) 0 calc(var(--gutter) + 12px); color: var(--ink); font-size: 15px; text-decoration: none; }
+.mnav__sub a:active { background: var(--secondary-tint); }
+.mnav__sub em { padding: 1px 7px; border-radius: 6px; background: var(--tertiary-tint); color: var(--tertiary-ink); font-size: 13px; font-style: normal; font-weight: 650; }
+.mnav__sub .mnav__all { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; min-height: 52px; color: var(--secondary); font-weight: 650; }
+.mnav__all span { font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.mnav__help { border-top: 1px solid var(--line); }
+.mnav__help a { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 var(--gutter); border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.mnav__help .ph { font-size: 22px; color: var(--secondary); }
+.mnav .drawer__vat { margin-top: 16px; border-bottom: 0; }
+@media (hover: hover) { .mnav__cat:hover, .mnav__help a:hover { background: var(--mist); } .mnav__sub a:hover { background: var(--secondary-tint); } }
+
+/* ---------- Coșul modificabil (10.11.2026): cantitate, ștergere, „Anulează”, prag de volum ---------- */
+.cart-line { grid-template-columns: 56px minmax(0, 1fr) 44px; grid-template-areas: "img name del" "img buy buy" "img hint hint"; row-gap: 6px; align-items: start; padding: 14px 0; }
+.cart-line img { grid-area: img; }
+.cart-line p { grid-area: name; align-self: center; }
+.cart-line__del { grid-area: del; margin-top: -8px; color: var(--ink-3); }
+.cart-line__buy { grid-area: buy; display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 12px; }
+.cart-line__buy .step { animation: none; }
+.cart-line__buy .step input { width: 100%; height: 44px; border: 0; background: none; text-align: center; font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cart-line__buy strong { justify-self: end; font-size: 16px; }
+.cart-line__hint { grid-area: hint; }
+.cart-line__hint .hint { margin-top: 0; }
+.cart-undo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; padding: 6px 6px 6px 14px; border-radius: var(--r-ctl); background: var(--secondary-900); color: #fff; font-size: 14px; }
+.cart-undo .text-btn { min-height: 44px; padding: 0 12px; color: #fff; font-weight: 650; }
+.cart-line__buy .step button:disabled { color: var(--ink-3); opacity: .45; cursor: default; }
+
+/* ---------- Listele (10.11.2026): inima pe card, foaia „Salvează în listă” ---------- */
+.save { position: absolute; top: 10px; right: -8px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--ink-3); font-size: 22px; cursor: pointer; }
+.save[aria-pressed="true"] { color: var(--tertiary); }
+.save[aria-pressed="true"] { background: var(--tertiary-tint); }
+.save:active { background: var(--secondary-tint); }
+.plp__grid .card__head { padding-right: 34px; }
+.lsave__prod { display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.lsave__prod img { width: 48px; height: 48px; object-fit: contain; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--photo-edge); }
+.lsave__prod p { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.lsave__prod small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: var(--ink-2); }
+.lsave__q { display: grid; grid-template-columns: 1fr 140px; align-items: center; gap: 12px; padding: 14px 0; }
+.lsave__q .qo__label { margin: 0; }
+.lsave__q .step { animation: none; }
+.lsave__q .step input { width: 100%; height: 44px; border: 0; background: none; text-align: center; font: inherit; font-size: 16px; font-weight: 600; }
+.lsave__q .step button:disabled { opacity: .45; }
+.lsave__lists { margin: 0; padding: 0; border: 0; }
+.lsave__list { display: grid; grid-template-columns: 24px 1fr; align-items: center; gap: 12px; min-height: 56px; padding: 6px 12px; margin-top: 6px; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; }
+.lsave__list:has(input:checked) { box-shadow: inset 0 0 0 2px var(--secondary); background: var(--secondary-tint); }
+.lsave__list input { width: 20px; height: 20px; accent-color: var(--secondary); }
+.lsave__list span { display: grid; font-size: 14px; color: var(--ink-2); }
+.lsave__list b { font-size: 15px; color: var(--ink); font-weight: 600; }
+.lsave__intro { padding: 14px 0 4px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.lsave__new { padding: 16px 0; }
+.lsave__sugg { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.lsave__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.lsave__row .btn { min-height: 52px; }
+.lsave__all { display: flex; justify-content: center; align-items: center; min-height: 44px; margin-top: 6px; font-size: 15px; font-weight: 600; color: var(--secondary); }
+
+/* S, 10.11.2026: afirmația Similarweb ca insignă peste fotografie (nu împinge căutarea în jos), cu sursa scrisă lângă; două dovezi pentru firme */
+.hero--s .hs__photo { height: 196px; }
+.hs__badge { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 34px; z-index: 1; display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px 8px 10px; border-radius: 12px; background: rgb(42 22 64 / .8); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .22); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-size: 13px; line-height: 1.35; color: #DCD1E8; }
+.hs__badge .ph { flex: none; margin-top: 1px; font-size: 18px; color: #F3D6EC; }
+.hs__badge b { font-size: 14px; font-weight: 650; color: #fff; }
+.hero--s .hs__text { margin-top: -18px; }
+.hero--s .hs__proofs { justify-content: flex-start; gap: 20px; }
+@media (max-width: 340px) { .hero--s .hs__photo { height: 176px; } .hs__badge { bottom: 30px; } .hs__badge b { font-size: 13px; } }
+
+/* S: dovada Similarweb ca rând de context deasupra titlului, fără card (10.11.2026, varianta D) */
+.hero--s .hs__photo { height: 178px; }
+.hero--s .hs__text { margin-top: -30px; }
+.hero--s .hs__badge { position: static; display: flex; align-items: flex-start; gap: 6px; margin: 0 0 8px; padding: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 13px; line-height: 1.35; font-weight: 600; color: #E9DDF5; }
+.hero--s .hs__badge .ph { margin-top: 0; font-size: 16px; color: #E9DDF5; }
+.hero--s .hs__badge em { font-style: normal; font-weight: 500; color: #BFA9D9; }
+/* S: cele două dovezi pentru firme, ca pereche: iconiță în chenar, titlu + detaliu, despărțite de o linie */
+.hero--s .hs__proofs { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 14px var(--gutter) 36px; }
+.hero--s .hs__proofs li { display: flex; align-items: center; gap: 10px; min-width: 0; white-space: normal; font-size: 13px; font-weight: 500; line-height: 1.3; color: #CDB8E6; }
+.hero--s .hs__proofs li + li { padding-left: 14px; border-left: 1px solid rgb(255 255 255 / .16); }
+.hero--s .hs__proofs b { display: block; font-size: 14px; font-weight: 650; color: #fff; }
+.hs__ico { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: rgb(255 255 255 / .1); }
+.hero--s .hs__proofs .hs__ico .ph { display: block; font-size: 18px; color: #E9DDF5; }
+@media (max-width: 340px) {
+  .hero--s .hs__photo { height: 160px; }
+  /* la 320 coloanele iau lățimea textului, ca „Livrare gratuită” să rămână pe un rând */
+  .hero--s .hs__proofs { grid-template-columns: auto auto; justify-content: space-between; }
+  .hero--s .hs__proofs li { gap: 7px; }
+  .hero--s .hs__proofs li + li { padding-left: 10px; }
+  .hero--s .hs__proofs b { font-size: 13px; }
+  .hs__ico { width: 28px; height: 28px; border-radius: 8px; }
+  .hero--s .hs__proofs .hs__ico .ph { font-size: 16px; }
+}

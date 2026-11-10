@@ -184,3 +184,16 @@ body.has-bar .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
   .pbuy { grid-template-columns: 132px minmax(0, 1fr); gap: 8px; }
   .pbuy .btn { font-size: 15px; padding: 0 8px; }
 }
+
+/* Disponibilitatea, imediat deasupra butonului (10.11.2026) */
+.pavail { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
+.pavail .ph { flex: none; margin-top: 1px; font-size: 20px; color: var(--green); }
+.pavail b { color: var(--green); font-weight: 650; }
+.pavail--low b, .pavail--low .ph { color: var(--ink); }
+.pavail--wait b, .pavail--wait .ph { color: var(--ink); }
+
+
+/* Salvează în listă (10.11.2026): sub cumpărare, acțiune secundară */
+.psave { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; margin-top: 10px; border: 0; border-radius: var(--r-ctl); background: #fff; box-shadow: inset 0 0 0 1.5px var(--secondary); color: var(--secondary); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.psave .ph { font-size: 20px; }
+.psave[aria-pressed="true"] { background: var(--tertiary-tint); box-shadow: inset 0 0 0 1.5px var(--tertiary); color: var(--tertiary-ink); }

@@ -15,7 +15,31 @@ const NEW_POOL = ['nou-dosar-multi', 'nou-tabla-90', 'nou-baterii', 'nou-lampa',
 
 // Variante de prim ecran pentru comparație (?hero=a|b|c|d): rămâne doar cea aleasă
 // Varianta o alege scriptul din <head> (clasa hv-*); o citim de acolo, ca să nu poată diferi
-const HERO_V = (document.documentElement.className.match(/\bhv-([a-l])\b/) || [, 'g'])[1];
+const HERO_V = (document.documentElement.className.match(/\bhv-([a-s])\b/) || [, 's'])[1];  // S implicită din 10.11.2026 (decizia Georgianei); G rămâne la ?hero=g
+// S: fotografia benzii, la alegere (Pexels, licență gratuită; se descarcă local după ce e aleasă)
+// Implicit e fotografia C (bibliorafturi), aleasă de Georgiana pe 09.11.2026 și salvată local; A și B rămân doar pentru comparație
+const S_PHOTOS = {
+  a: { id: 37514316, pos: '50% 45%' },  // produse colorate pe birou bleumarin
+  b: { id: 7718706, pos: '40% 50%' },   // compoziție premium, gri închis, accent portocaliu
+};
+const hsImg = document.getElementById('hs-img');
+const sAlt = hsImg && S_PHOTOS[params.get('foto')];
+if (sAlt) {
+  hsImg.removeAttribute('srcset');
+  hsImg.src = `https://images.pexels.com/photos/${sAlt.id}/pexels-photo-${sAlt.id}.jpeg?auto=compress&cs=tinysrgb&w=1200`;
+  hsImg.style.objectPosition = sAlt.pos;
+}
+// Runda 5 (m, n, o): primesc panoul lui G (căutarea și blocul pentru firme), cu căutările cele mai dese din GA4 pe chips
+const slot = document.querySelector(`[data-hero="${HERO_V}"] [data-sheet]`);
+if (slot) {
+  const sheet = document.querySelector('[data-hero="g"] .hp__sheet');
+  slot.replaceWith(sheet);
+  const chips = [['Biblioraft', 'biblioraft'], ['Hârtie A4', null], ['Capsator', 'capsator'], ['Plicuri', 'plicuri'], ['Etichete', 'etichete'], ['Toner', 'toner']];
+  // P: blocul pentru firme coboară sub categorii, ca primul ecran să fie căutare + categorii
+  const fslot = document.querySelector(`[data-hero="${HERO_V}"] [data-firma-slot]`);
+  if (fslot) fslot.replaceWith(sheet.querySelector('.hero__guest'));
+  sheet.querySelector('.he__chips').innerHTML = chips.map(([t, q]) => `<li><a class="he__chip" href="${q ? 'cautare.html?q=' + q : 'categorie.html?fmt=A4'}">${t}</a></li>`).join('');
+}
 document.querySelectorAll('[data-hero]').forEach(el => { if (el.dataset.hero !== HERO_V) el.remove(); });
 if (document.querySelector('.hb__search')) document.querySelector('.hb__search').append(document.getElementById('hsearch'));
 if (HERO_V === 'c') document.querySelector('#noutati #feature')?.remove();

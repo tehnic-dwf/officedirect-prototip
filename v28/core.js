@@ -84,8 +84,39 @@ const ANSWERS = [
 for (const [k, v] of Object.entries({ ...(window.EXTRA_P || {}), ...(window.SEARCH_P || {}) })) {
   if (P[k]) { const { img: _img, ...rest } = v; P[k] = { ...P[k], ...rest }; } else P[k] = v;
 }
+// Codurile reale OfficeDirect („Cod produs” de pe pagina produsului, 7 sau 9 cifre), citite pe officedirect.ro la 05.11.2026.
+// Le folosesc căutarea, pagina produsului și comanda rapidă. 5,3% din căutările pe site din ultimele 12 luni sunt astfel de coduri (GA4).
+const CODES = {
+  'biblioraft-5': '311082300', 'biblioraft-75-culori': '323071715', 'capse': '304030914', 'container-drect': '312111300',
+  'display-l': '311060909', 'dosar-accenta': '301111242', 'double-a': '307101208', 'etichete': '313021250', 'file-noki': '1532002',
+  'folie-laminare': '306131120', 'go-paper': '313050834', 'hartie-igienica': '322011231', 'ik-eco': '325081537', 'manusi': '308051347',
+  'marker-pilot': '306121620', 'nou-baterii': '303050905', 'nou-cablu': '322050816', 'nou-calendar': '311142305', 'nou-dosar-multi': '325080900',
+  'nou-lampa': '304110916', 'nou-tabla-90': '315110900', 'odorizant': '330051544', 'pix-bic': '303081478', 'prosop': '302110701',
+  'servetele': '312110887', 'tabla': '308051006', 'tesa': '523051340', 'xerox-business': '1500003', 'xerox-premier': '1500005',
+};
+for (const [id, c] of Object.entries(CODES)) if (P[id] && !P[id].code) P[id].code = c;
+const byCode = code => Object.keys(P).find(id => P[id].code === code);
+// „Cel mai vândut” rămâne pe un singur produs din fiecare categorie: primul după vânzări (rank).
+// Cu trei produse etichetate în aceeași listă, eticheta nu mai ajută la ales (verificarea din 10.11.2026).
+{
+  const top = {};
+  for (const [id, p] of Object.entries(P)) if (p.best && (!top[p.cat] || (p.rank ?? 99) < (P[top[p.cat]].rank ?? 99))) top[p.cat] = id;
+  for (const [id, p] of Object.entries(P)) if (p.best && top[p.cat] !== id) p.best = false;
+}
+// Bucata și setul nu se confundă (verificarea din 10.11.2026): la seturile de N bucăți apare prețul pe bucată,
+// iar produsul la bucată spune „1 buc.” când există și un set cu același nume (biblioraftul Noki la 9,99 și 229,99 lei)
+{
+  const names = {};
+  for (const p of Object.values(P)) if (p.cardName) names[p.cardName] = (names[p.cardName] || 0) + 1;
+  for (const p of Object.values(P)) {
+    const m = !p.per && p.unit?.match(/^(?:Set|Top|Cutie|Bax) de ([\d.]+)(?: de)? bucăți$/);
+    // Doar unde prețul pe bucată spune ceva (nu la cutia de 1.000 de capse, care ar ieși 0,00 lei/buc.)
+    if (m && p.price / Number(m[1].replace('.', '')) >= 0.05) p.per = [Number(m[1].replace('.', '')), 'buc.'];
+    if (p.unit === '1 bucată' && names[p.cardName] > 1 && p.meta != null && !/\b1 buc\./.test(p.meta)) p.meta = [p.meta, '1 buc.'].filter(Boolean).join(' · ');
+  }
+}
 // Paginile se abonează la schimbările de coș (de ex. homepage-ul redesenează „Văzute recent”)
-const hooks = { cart: [], vat: [] };
+const hooks = { cart: [], vat: [], lists: [] };
 
 /* ---------- Stare locală validată (poate lipsi: mod privat, stocare blocată, date vechi) ---------- */
 const store = {
@@ -93,6 +124,10 @@ const store = {
   set(k, v, s = localStorage) { try { s.setItem('od28:' + k, JSON.stringify(v)); } catch { /* fără stocare */ } },
 };
 const params = new URLSearchParams(location.search);
+// Cantitatea se scrie înainte de „Adaugă” în categorie și în rezultatele căutării: implicit din 10.11.2026 (decizia Georgianei),
+// ca o firmă să pună 50 de topuri dintr-o atingere. ?cant=0 arată varianta veche (doar buton), ținută în sesiune.
+if (params.has('cant')) store.set('cant', params.get('cant') !== '0', sessionStorage);
+const QTY_FIRST = ['plp', 'serp'].includes(document.body.dataset.page) && store.get('cant', true, sessionStorage) !== false;
 const validKey = k => { const [id, color] = k.split('|'); const p = P[id]; return !!p && (p.colors ? p.colors.includes(color) : color === undefined); };
 const rawCart = store.get('cart', {});
 const rawViewed = store.get('viewed', []);
@@ -254,6 +289,11 @@ function buyHTML(id) {
     return `<button class="add add--choose" type="button" data-choose="${id}" aria-haspopup="dialog" aria-label="Alege culoarea: ${p.name}${q ? `, ${q} în coș` : ''}">Alege culoarea${q ? `<span class="add__count" aria-hidden="true">${q}</span>` : ''}</button>`;
   }
   const q = state.cart[id] || 0;
+  // Varianta ?cant=1: câmp de cantitate lângă buton, pentru cine cumpără 30 de bucăți deodată
+  if (!q && QTY_FIRST) return `<div class="qadd" role="group" aria-label="Adaugă în coș: ${p.name}">
+    <label class="sr-only" for="qa-${id}">Cantitate</label>
+    <input class="qadd__n" id="qa-${id}" type="text" inputmode="numeric" pattern="[0-9]*" value="1" maxlength="4" data-qa="${id}" enterkeyhint="done" autocomplete="off">
+    <button class="add" type="button" data-addq="${id}" aria-label="Adaugă în coș: ${p.name}"><i class="ph ph-plus" aria-hidden="true"></i>Adaugă</button></div>`;
   if (!q) return `<button class="add" type="button" data-add="${id}" aria-label="Adaugă în coș: ${p.name}"><i class="ph ph-plus" aria-hidden="true"></i>Adaugă în coș</button>`;
   return stepHTML(id, q, `data-qty="${id}"`, p.name);
 }
@@ -340,6 +380,7 @@ function cardHTML(id, index, list) {
     <div data-price="${id}">${priceHTML(id)}</div>
     <div class="buy" data-buy="${id}">${buyHTML(id)}</div>
     ${list === 'new' ? '' : `<div class="card__extra" data-hint="${id}">${hintHTML(id)}</div>`}
+    ${SAVE_ON_CARDS ? saveBtnHTML(id) : ''}
   </li>`;
 }
 
@@ -402,7 +443,7 @@ function setQty(key, q, origin, opts = {}) {
     const btn = (scope && $(`[data-choose="${id}"]`, scope)) || $(`[data-choose="${id}"]`);
     btn?.focus({ preventScroll: true });
   } else if (wasInCard && (q === 0 || before === 0)) {
-    const target = q === 0 ? $(`[data-add="${id}"]`, scope) : $(`[data-inc="${id}"]`, scope);
+    const target = q === 0 ? $(`[data-add="${id}"], [data-qa="${id}"]`, scope) : $(`[data-inc="${id}"]`, scope);
     target?.focus({ preventScroll: true });
   }
 }
@@ -421,6 +462,11 @@ document.addEventListener('click', e => {
   const inc = e.target.closest('[data-inc]');
   const dec = e.target.closest('[data-dec]');
   const choose = e.target.closest('[data-choose]');
+  const addq = e.target.closest('[data-addq]');
+  if (addq) {
+    const id = addq.dataset.addq, n = Math.max(1, Math.min(9999, Number($(`[data-qa="${id}"]`, addq.parentElement)?.value) || 1));
+    return setQty(id, (state.cart[id] || 0) + n, addq);
+  }
   if (add) {
     const id = add.dataset.add;
     if (P[id].colors) return openVariant(id, add);
@@ -456,9 +502,13 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => {
   const inp = e.target.closest?.('[data-qty], [data-vqty]');
   if (inp && e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+  // În câmpul de cantitate dinainte de adăugare, Enter adaugă
+  const qa = e.target.closest?.('[data-qa]');
+  if (qa && e.key === 'Enter') { e.preventDefault(); qa.parentElement.querySelector('[data-addq]').click(); }
 });
+document.addEventListener('focusin', e => { if (e.target.matches?.('[data-qa]')) e.target.select(); });
 document.addEventListener('input', e => {
-  const inp = e.target.closest('[data-qty], [data-vqty]');
+  const inp = e.target.closest('[data-qty], [data-vqty], [data-qa]');
   if (inp) inp.value = inp.value.replace(/\D/g, '');
 });
 
@@ -510,6 +560,9 @@ function renderCartSheet() {
       <a class="btn btn--secondary btn--block" href="#esentiale" data-close>Vezi produsele de bază</a>`;
     return;
   }
+  // Focusul rămâne pe același control după redesenare (+, −, câmp, ștergere), ca în coș să poți schimba mai multe rânduri la rând
+  const act = document.activeElement?.closest?.('#cart-body') ? document.activeElement : null;
+  const keep = act && ['data-inc', 'data-dec', 'data-qty', 'data-cart-del'].map(a => act.hasAttribute(a) ? `[${a}="${act.getAttribute(a)}"]` : null).find(Boolean);
   const { total, byId } = cartTotals();
   const totalNet = round2(keys.reduce((s, k) => { const id = k.split('|')[0]; return s + state.cart[k] * net(unitPrice(id, byId[id])); }, 0));
   const m = shipMessage(total);
@@ -519,14 +572,19 @@ function renderCartSheet() {
   const pool = [...new Set([...inCart.flatMap(id => COMPLEMENT[id] || []), ...FILLERS])].filter(id => !qtyOf(id) && !P[id].colors && P[id].stock !== 0);
   const fitting = left > 0 ? pool.filter(id => P[id].price <= left) : pool;
   const fill = m.done ? [] : (fitting.length ? fitting : pool).slice(0, 3);
-  body.innerHTML = `<p class="ship-line${m.done ? ' is-done' : ''}"><i class="ph ph-truck" aria-hidden="true"></i><span>${m.text}</span></p>` +
+  // Coșul se poate modifica pe loc: cantitate (−, câmp, +), ștergere cu „Anulează”, pragul de volum sub produs (Baymard: cantitatea în coș)
+  body.innerHTML = undoHTML() + `<p class="ship-line${m.done ? ' is-done' : ''}"><i class="ph ph-truck" aria-hidden="true"></i><span>${m.text}</span></p>` +
     keys.map(k => {
       const [id, color] = k.split('|');
       const q = state.cart[k], u = unitPrice(id, byId[id]);
+      const name = color ? `${P[id].name}, ${color}` : P[id].name;
       return `<div class="cart-line">
         <img src="${img(id)}" alt="" width="56" height="56">
-        <p>${P[id].name}<small>${color ? `${color} · ` : ''}${q} × ${pLei(u)}${u < P[id].price ? ' · preț de volum' : ''}</small></p>
-        <strong>${lei(round2(q * vatPrice(u)))}</strong>
+        <p>${P[id].name}<small>${color ? `${color} · ` : ''}${pLei(u)}/${/^1 /.test(P[id].unit) ? 'buc.' : P[id].unit.split(' ')[0].toLowerCase()}${u < P[id].price ? ' · preț de volum' : ''}</small></p>
+        <button class="icon-btn cart-line__del" type="button" data-cart-del="${k}" aria-label="Scoate din coș: ${esc(name)}"><i class="ph ph-trash" aria-hidden="true"></i></button>
+        <div class="cart-line__buy">${stepHTML(k, q, `data-qty="${k}"`, esc(name)).replace(`aria-label="Scoate din coș: ${esc(name)}"`, 'aria-label="Scade cantitatea"').replace('ph-trash', 'ph-minus').replace('<button type="button" data-dec=', q === 1 ? '<button type="button" disabled data-dec=' : '<button type="button" data-dec=')}
+          <strong>${lei(round2(q * vatPrice(u)))}</strong></div>
+        ${P[id].tiers && !color ? `<div class="cart-line__hint">${hintHTML(id)}</div>` : ''}
       </div>`;
     }).join('') +
     `<div class="cart-sum">
@@ -541,7 +599,27 @@ function renderCartSheet() {
         <span><span class="mini__name">${P[id].name}</span><span class="mini__price">${pLei(P[id].price)} ${vatTag()}</span>${P[id].old ? `<span class="mini__was">${wasHTML(P[id])}</span>` : ''}</span>
         <button class="mini__add" type="button" data-add="${id}" aria-label="Adaugă în coș: ${P[id].name}"><i class="ph ph-plus" aria-hidden="true"></i></button>
       </li>`).join('')}</ul>` : '');
+  if (keep) ($(keep, body) || $('[data-cart-del]', body) || $('#sheet-cos [data-close]'))?.focus({ preventScroll: true });
 }
+// Ultimul produs scos din coș se poate pune la loc, cu aceeași cantitate și culoare
+// var + funcție: coșul se poate desena înainte ca linia asta să ruleze
+var removed = null;
+function undoHTML() { return removed ? `<p class="cart-undo" role="status"><span>Ai scos ${esc(removed.name)}.</span><button class="text-btn" type="button" data-cart-undo>Anulează</button></p>` : ''; }
+document.addEventListener('click', e => {
+  const del = e.target.closest('[data-cart-del]');
+  if (del) {
+    const k = del.dataset.cartDel, [id, color] = k.split('|');
+    removed = { key: k, q: state.cart[k], name: color ? `${P[id].name}, ${color}` : P[id].name };
+    setQty(k, 0, del);
+    $('[data-cart-undo]')?.focus({ preventScroll: true });
+    return;
+  }
+  if (e.target.closest('[data-cart-undo]') && removed) {
+    const r = removed; removed = null;
+    setQty(r.key, r.q, null);
+    $(`[data-cart-del="${r.key}"]`)?.focus({ preventScroll: true });
+  }
+});
 
 /* ---------- Comutatorul cu / fără TVA: redesenează prețurile pe loc, fără reîncărcare ---------- */
 function setVat(mode, from) {
@@ -562,7 +640,68 @@ function setVat(mode, from) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-vat]'); if (b) setVat(b.dataset.vat, b); });
 // Comutatorul stă și în meniu, pe toate paginile
-$('#menu .drawer__head')?.insertAdjacentHTML('afterend', '<div class="drawer__vat"><p>Prețuri</p><div data-vat-switch></div></div>');
+/* ---------- Meniul (09.11.2026): o singură sursă pentru toate paginile ----------
+   Trei zone separate: scurtături (comandă rapidă, nou, oferte), categoriile cu subcategorii (acordeon) și ajutorul.
+   Categoriile și subcategoriile sunt cele de pe officedirect.ro (citite pe 09.11.2026); pe mobil arătăm primele
+   subcategorii după căutările din GA4 (12 luni), iar restul sunt la „Toate din…”. Ordinea categoriilor urmează căutările. */
+const IS_HOME = document.body.dataset.page === 'home';
+const MENU_CATS = [
+  ['Hârtie', 'produse-din-hartie', [['Hârtie copiator', 'categorie.html'], ['Plicuri', 'plicuri'], ['Etichete autocolante', 'etichete-autocolante'], ['Hârtie colorată', 'hartie-colorata'], ['Agende 2027', 'agende-birou', 'Nou'], ['Caiete de birou', 'caiete-de-birou'], ['Notițe autoadezive', 'notite-autoadezive'], ['Registre și repertoare', 'registre-si-repertoare'], ['Tipizate', 'tipizate']], 22],
+  ['Arhivare', 'organizare-si-arhivare', [['Bibliorafturi', 'bibliorafturi'], ['Dosare din plastic', 'dosare-din-plastic'], ['File de protecție', 'file-protectie-documente'], ['Mape din plastic', 'mape-din-plastic'], ['Cutii de arhivare, alonje', 'cutii-de-arhivare-alonje'], ['Separatoare', 'separatoare'], ['Dosare din carton', 'dosare-din-carton'], ['Mape din carton', 'mape-din-carton']], 20],
+  ['Cartușe și toner', 'cartuse-imprimanta-originale', [['Cartușe originale', '', ''], ['Compatibile laser', '/cartuse-compatibile-laser'], ['Compatibile inkjet', '/cartuse-compatibile-inkjet'], ['Riboane', '/cartuse-compatibile-laser/riboane']], 0],
+  ['Instrumente de scris', 'instrumente-de-scris', [['Pixuri cu mecanism', 'pixuri-cu-mecanism'], ['Pixuri fără mecanism', 'pixuri-fara-mecanism'], ['Pixuri cu gel', 'pixuri-cu-gel'], ['Textmarkere', 'textmarkere'], ['Markere permanente', 'markere-permanente'], ['Markere whiteboard', 'markere-flipchart-si-whiteboard'], ['Stilouri', 'stilouri'], ['Corectoare', 'corectoare']], 20],
+  ['Accesorii pentru birou', 'accesorii-pentru-birou', [['Capsatoare', 'capsatoare'], ['Capse, decapsatoare', 'capse-decapsatoare'], ['Perforatoare', 'perforatoare'], ['Agrafe, clipsuri', 'agrafe-clipsuri'], ['Bandă adezivă', 'benzi-adezive-dispencere'], ['Adezivi', 'adezivi'], ['Foarfece', 'foarfece'], ['Tăvițe pentru documente', 'tavite-pentru-documente']], 29],
+  ['Curățenie și protocol', 'curatenie-si-protocol', [['Prosoape de hârtie', 'prosoape-hartie'], ['Hârtie igienică', 'hartie-igienica'], ['Șervețele', 'servetele'], ['Săpunuri', 'sapunuri'], ['Saci menajeri', 'saci-menajeri'], ['Ceai și cafea', 'ceai-si-cafea'], ['Pahare, farfurii, tacâmuri', 'farfurii-si-tacamuri'], ['Dezinfectanți', 'dezinfectanti']], 18],
+  ['Tehnică de birou', 'tehnica-de-birou', [['Laminatoare', 'laminatoare'], ['Folii de laminare', 'folii-laminare'], ['Distrugătoare de documente', 'distrugatoare-documente'], ['Calculatoare de birou', 'calculatoare-de-birou'], ['Ghilotine', 'ghilotine-hartie'], ['Aparate de îndosariat', 'aparate-indosariat-inele-plastic']], 18],
+  ['Sisteme de afișare', 'sisteme-de-afisare', [['Table magnetice', 'table-magnetice'], ['Flipchart', 'flipchart'], ['Accesorii pentru table', 'accesorii-table-magnetice'], ['Panouri de plută', 'panouri-pluta'], ['Ecusoane', 'ecusoane'], ['Clipboard', 'clipboard']], 19],
+  ['Accesorii IT', 'accesorii-it', [['Baterii, acumulatori', 'baterii-acumulatori-incarcatoare'], ['Mouse și tastaturi', 'mouse-si-tastaturi'], ['Memorii USB', 'memorii-usb'], ['Cabluri și accesorii', 'cabluri-si-accesorii'], ['Boxe, căști, microfoane', 'boxe-casti-audio-microfoane']], 13],
+  ['Rechizite școlare', 'rechizite-scolare', [['Caiete', 'caiete-scolare'], ['Penare', 'penare'], ['Ghiozdane', 'ghiozdane'], ['Creioane colorate', 'creioane-colorate'], ['Carioci', 'carioci'], ['Acuarele, tempera, pensule', 'acuarele-tempera'], ['Stilouri școlare', 'stilouri-cerneala'], ['Blocuri de desen', 'blocuri-de-desen']], 18],
+];
+// Subcategoria: cale relativă la categorie, cale absolută („/…”) sau pagină din prototip („….html”)
+const subHref = (cat, s) => s.endsWith('.html') ? s : s.startsWith('/') ? SITE + s.slice(1) : SITE + cat + (s ? '/' + s : '');
+function menuHTML() {
+  const here = document.body.dataset.page;
+  const shortcuts = [
+    ['comanda-rapida.html', 'ph-lightning', 'Comandă rapidă după cod', 'Lipești codurile, pui tot în coș', here === 'rapid'],
+    ['liste.html', 'ph-heart', 'Listele mele', 'Ce comanzi des, comandat dintr-o dată', here === 'liste'],
+    [IS_HOME ? '#noutati' : 'index.html#noutati', 'ph-sparkle', 'Nou în catalog', 'Produse adăugate recent'],
+    [SITE + 'index.php?route=product/special', 'ph-tag', 'Oferte', 'Reduceri și prețuri de volum'],
+  ];
+  const help = [
+    [IS_HOME ? '#firme' : 'index.html#firme', 'ph-buildings', 'Pentru firme'],
+    [SITE + 'index.php?route=account/order', 'ph-package', 'Comenzile mele'],
+    [SITE + 'livrare', 'ph-truck', 'Livrare și retur'],
+    ['#', 'ph-chat-circle-dots', 'Ajutor: telefon și chat', 'sheet-ajutor'],
+  ];
+  return `<nav class="mnav" aria-label="Meniu">
+    <ul class="mnav__short" aria-label="Scurtături">${shortcuts.map(([h, i, t, s, cur]) => `<li><a href="${h}"${h.startsWith('#') ? ' data-close' : ''}${cur ? ' aria-current="page"' : ''}><i class="ph ${i}" aria-hidden="true"></i><span><b>${t}</b>${s}</span></a></li>`).join('')}</ul>
+    <h2 class="mnav__label" id="mnav-cat">Categorii</h2>
+    <ul class="mnav__cats" aria-labelledby="mnav-cat">${MENU_CATS.map(([name, slug, subs, total], k) => `<li>
+      <button class="mnav__cat" type="button" aria-expanded="false" aria-controls="mnav-sub-${k}">${name}<i class="ph ph-caret-down" aria-hidden="true"></i></button>
+      <ul class="mnav__sub" id="mnav-sub-${k}" hidden>
+        <li><a class="mnav__all" href="${SITE + slug}">Toate din ${name.toLowerCase()}${total ? `<span>${cate(total, 'subcategorii')}</span>` : ''}</a></li>
+        ${subs.map(([t, s, tag]) => `<li><a href="${subHref(slug, s)}">${t}${tag ? `<em>${tag}</em>` : ''}</a></li>`).join('')}
+      </ul></li>`).join('')}</ul>
+    <h2 class="mnav__label" id="mnav-help">Cont și ajutor</h2>
+    <ul class="mnav__help" aria-labelledby="mnav-help">${help.map(([h, i, t, sheet]) => `<li><a href="${h}"${sheet ? ` data-open="${sheet}"` : h.startsWith('#') ? ' data-close' : ''}><i class="ph ${i}" aria-hidden="true"></i>${t}</a></li>`).join('')}</ul>
+    <div class="drawer__vat"><p id="mnav-vat">Prețuri afișate</p><div data-vat-switch></div></div>
+  </nav>`;
+}
+{
+  const m = $('#menu');
+  if (m) { $$('.drawer__nav, .drawer__sub', m).forEach(n => n.remove()); $('.drawer__head', m).insertAdjacentHTML('afterend', menuHTML()); }
+}
+// Acordeon: o singură categorie deschisă odată, ca lista să rămână scurtă
+document.addEventListener('click', e => {
+  const b = e.target.closest('.mnav__cat');
+  if (!b) return;
+  const open = b.getAttribute('aria-expanded') !== 'true';
+  $$('.mnav__cat[aria-expanded="true"]').forEach(o => { if (o !== b) { o.setAttribute('aria-expanded', 'false'); $('#' + o.getAttribute('aria-controls')).hidden = true; } });
+  b.setAttribute('aria-expanded', open);
+  $('#' + b.getAttribute('aria-controls')).hidden = !open;
+  if (open) b.scrollIntoView({ block: 'nearest', behavior: reduce.matches ? 'auto' : 'smooth' });
+  track('menu_category', null, { category: b.textContent.trim(), expanded: open });
+});
 renderVatSwitches();
 
 /* ---------- Toast după adăugare (constatarea 34, M.079) ---------- */
@@ -714,6 +853,20 @@ function renderRecent() {
   $('#suggest-popular').innerHTML = POPULAR.slice(0, 6).map(t => `<a class="chip" href="${serpHref(t)}">${esc(t)}</a>`).join('');
   $('#suggest-help').innerHTML = ANSWERS.slice(0, 3).map(x => `<li><a href="${x.href}" data-answer="${x.key}"><i class="ph ${x.icon}" aria-hidden="true"></i>${x.text}</a></li>`).join('');
 }
+// Perechi cod-cantitate dintr-un text: „323071715 25 1500003 10” → [[323071715, 25], [1500003, 10]]
+function codesIn(text) {
+  const t = text.split(/[\s;,]+/).filter(Boolean), out = [];
+  t.forEach((x, i) => { if (/^(\d{7}|\d{9})$/.test(x)) out.push([x, /^\d{1,4}$/.test(t[i + 1] || '') ? Number(t[i + 1]) : 1]); });
+  return out;
+}
+// Lipirea unei liste în căutare păstrează rândurile ca spații (altfel câmpul le lipește unul de altul)
+document.getElementById('q')?.addEventListener('paste', e => {
+  const t = e.clipboardData?.getData('text') || '';
+  if (!/\n/.test(t.trim()) || codesIn(t).length < 2) return;
+  e.preventDefault();
+  e.target.value = t.trim().split(/\s+/).join(' ');
+  e.target.dispatchEvent(new Event('input', { bubbles: true }));
+});
 let searchTimer;
 function renderLive() {
   const raw = q.value.trim();
@@ -736,7 +889,14 @@ function renderLive() {
     const rest = norm(term).startsWith(typed) ? `${esc(term.slice(0, raw.length))}<b>${esc(term.slice(raw.length))}</b>` : esc(term);
     return `<li><a href="${serpHref(term)}" data-term="${esc(term)}"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>${rest}</span><small>${n}</small></a></li>`;
   }).join('');
-  $('#suggest-answers').innerHTML = answers.map(a => `<li><a href="${a.href}" data-answer="${a.key}"><i class="ph ${a.icon}" aria-hidden="true"></i>${a.text}</a></li>`).join('');
+  // Mai multe coduri în căutare (scrise sau lipite din Excel): le ducem pe toate în comanda rapidă, cu cantitățile lor
+  const codeList = codesIn(raw);
+  const rapid = codeList.length > 1 ? `<li><a class="suggest__rapid" href="comanda-rapida.html?coduri=${codeList.map(([c, n]) => c + ':' + n).join(',')}" data-answer="comanda_rapida"><i class="ph ph-lightning" aria-hidden="true"></i><span><b>Ai scris ${codeList.length} coduri.</b> Pune-le pe toate într-o listă</span></a></li>` : '';
+  // Coduri de reducere scrise în căutare (nou26: 5.570 de căutări, promo25: 4.265 în 12 luni, GA4): spunem unde se folosesc
+  const promo = /^(nou|promo|promobagz|bf|sale|afs|afisare)\d{2}$/i.test(raw.replace(/\s+/g, ''))
+    ? `<li><a class="suggest__rapid" href="#" data-open="sheet-cos" data-answer="cod_reducere"><i class="ph ph-tag" aria-hidden="true"></i><span><b>„${esc(raw.toUpperCase())}” e un cod de reducere.</b> Îl scrii în coș, la „Cod de reducere”.</span></a></li>` : '';
+  if (promo) track('search_promo_detected', null, { search_term: raw });
+  $('#suggest-answers').innerHTML = promo + rapid + answers.map(a => `<li><a href="${a.href}" data-answer="${a.key}"><i class="ph ${a.icon}" aria-hidden="true"></i>${a.text}</a></li>`).join('');
   // Categoriile apar doar când rezultatele sunt în mai multe locuri: maximum 3 (constatarea 13)
   $('#suggest-cats').innerHTML = res.scopes.length > 1 ? res.scopes.slice(0, 3).map(([c, n]) => `<li><a href="${serpHref(raw, { cat: c })}" data-scope="${esc(c)}">în ${esc(c)}<span>${n}</span></a></li>`).join('') : '';
   $('#suggest-count').textContent = total ? 'Produse' : '';
@@ -865,3 +1025,109 @@ function restoreScroll() {
   if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') scrollTo({ top: store.get(yKey(), 0, sessionStorage), behavior: 'instant' });
 }
 addEventListener('pageshow', e => { if (e.persisted) scrollTo({ top: store.get(yKey(), scrollY, sessionStorage), behavior: 'instant' }); });
+
+
+/* ---------- Listele: catalogul firmei (10.11.2026) ----------
+   De ce: pe site, 7.387 de oameni au salvat produse în liste într-un an (31.485 de salvări, GA4), iar clienții care revin
+   caută codurile unul câte unul (~2.900 de oameni, ~18 căutări de cod fiecare). Lista ține produsul și cantitatea obișnuită
+   și se comandă întreagă prin comanda rapidă, unde se verifică stocul, culorile și prețul de volum înainte de coș.
+   Ipoteza: comenzile repetate cresc și căutările de cod scad, pentru că o comandă lunară devine două atingeri.
+   Se salvează din card (categorie, căutare), din pagina de produs și din comanda rapidă („Salvează ca listă”). */
+var SAVE_ON_CARDS = ['plp', 'serp'].includes(document.body.dataset.page);
+function listsAll() {
+  const v = store.get('lists', []);
+  return (Array.isArray(v) ? v : []).filter(l => l && l.id && typeof l.name === 'string' && Array.isArray(l.items))
+    .map(l => ({ ...l, items: l.items.filter(x => Array.isArray(x) && P[String(x[0]).split('|')[0]] && Number.isInteger(x[1]) && x[1] > 0 && x[1] <= 9999) }));
+}
+function listsSave(v) { store.set('lists', v); hooks.lists.forEach(f => f()); }
+const listOf = id => listsAll().filter(l => l.items.some(([k]) => k.split('|')[0] === id));
+function listNew(name, items = []) {
+  const all = listsAll(); const l = { id: 'l' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: name.trim().slice(0, 40) || 'Lista mea', items };
+  all.push(l); listsSave(all); return l;
+}
+const listTotal = l => round2(l.items.reduce((s, [k, q]) => { const id = k.split('|')[0]; return s + vatPrice(unitPrice(id, q)) * q; }, 0));
+function saveBtnHTML(id) {
+  const n = listOf(id).length, name = esc(P[id].name);
+  return `<button class="save" type="button" data-save="${id}" aria-pressed="${n > 0}" aria-label="${n ? `Salvat în ${n === 1 ? 'listă' : n + ' liste'}: ${name}. Schimbă` : `Salvează în listă: ${name}`}"><i class="ph ph-heart" aria-hidden="true"></i></button>`;
+}
+function refreshSaves() { $$('[data-save]').forEach(b => { const id = b.dataset.save, n = listOf(id).length; b.setAttribute('aria-pressed', n > 0); if (b.classList.contains('save')) b.setAttribute('aria-label', n ? `Salvat în ${n === 1 ? 'listă' : n + ' liste'}: ${P[id].name}. Schimbă` : `Salvează în listă: ${P[id].name}`); }); }
+hooks.lists.push(refreshSaves);
+
+// Foaia „Salvează în listă”: listele existente (bifate unde e deja), listă nouă cu nume propuse după categorie, cantitatea obișnuită
+document.body.insertAdjacentHTML('beforeend', `<section class="sheet layer" id="sheet-lista" role="dialog" aria-modal="true" aria-labelledby="sls-title" hidden>
+  <div class="sheet__grip" aria-hidden="true"></div>
+  <div class="sheet__head"><h2 class="sheet__title" id="sls-title">Salvează în listă</h2><button class="icon-btn" type="button" data-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+  <div id="lsave"></div>
+</section>`);
+const CAT_LIST = { 'Hârtie': 'Hârtie și plicuri', 'Arhivare': 'Arhivare', 'Curățenie': 'Curățenie și protocol', 'Afișare': 'Sala de ședințe', 'Accesorii': 'Birou', 'Scris': 'Instrumente de scris', 'IT': 'IT și electrice', 'Tehnică': 'Tehnică de birou' };
+let saving = null;   // { id, color, q, picked: Set de id-uri de listă }
+function openSave(id, color, q) {
+  const key = keyOf(id, color || undefined);
+  const all = listsAll();
+  saving = { id, color: color || null, q: Math.max(1, q || all.flatMap(l => l.items).find(([k]) => k === key)?.[1] || 1), picked: new Set(all.filter(l => l.items.some(([k]) => k === key)).map(l => l.id)) };
+  if (!all.length) saving.fresh = true;
+  renderSave();
+  open('sheet-lista');
+}
+function renderSave() {
+  const s = saving, p = P[s.id], all = listsAll();
+  const sugg = [CAT_LIST[p.cat] || p.cat, 'Comanda lunară'].filter(n => n && !all.some(l => l.name.toLowerCase() === n.toLowerCase()));
+  $('#lsave').innerHTML = `<div class="lsave__prod"><img src="${img(s.id)}" alt="" width="48" height="48"><p>${esc(p.name)}${s.color ? `, ${esc(s.color)}` : ''}<small>${p.code ? `Cod ${p.code} · ` : ''}${esc(p.unit)}</small></p></div>
+    <div class="lsave__q"><p class="qo__label" id="lsave-ql">Cât comanzi de obicei</p>
+      <div class="step" role="group" aria-labelledby="lsave-ql">
+        <button type="button" data-lsq="-1" aria-label="Scade cantitatea"${s.q <= 1 ? ' disabled' : ''}><i class="ph ph-minus" aria-hidden="true"></i></button>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" value="${s.q}" id="lsave-q" aria-label="Cantitate obișnuită">
+        <button type="button" data-lsq="1" aria-label="Crește cantitatea"><i class="ph ph-plus" aria-hidden="true"></i></button>
+      </div></div>
+    ${all.length ? `<fieldset class="lsave__lists"><legend class="qo__label">Listele tale</legend>
+      ${all.map(l => `<label class="lsave__list"><input type="checkbox" value="${l.id}"${s.picked.has(l.id) ? ' checked' : ''}><span><b>${esc(l.name)}</b>${l.items.length ? cate(l.items.length, l.items.length === 1 ? 'produs' : 'produse') : 'listă nouă'}</span></label>`).join('')}
+    </fieldset>` : '<p class="lsave__intro">Fă-ți o listă cu produsele pe care le comanzi des. O comanzi apoi întreagă, din comanda rapidă.</p>'}
+    <form class="lsave__new" id="lsave-new" novalidate>
+      <label class="qo__label" for="lsave-name">${all.length ? 'Sau într-o listă nouă' : 'Numele listei'}</label>
+      ${sugg.length ? `<div class="lsave__sugg">${sugg.map(n => `<button class="chip" type="button" data-lsugg="${esc(n)}">${esc(n)}</button>`).join('')}</div>` : ''}
+      <div class="lsave__row"><input class="field__input" id="lsave-name" maxlength="40" placeholder="ex. Birou etaj 2" autocomplete="off"><button class="btn btn--secondary" type="submit">Creează</button></div>
+    </form>
+    <button class="btn btn--dark btn--block" type="button" data-lsave${all.length ? '' : ' disabled'}>Salvează</button>
+    <a class="lsave__all" href="liste.html">Vezi listele mele</a>`;
+}
+function createFromSheet(name) {
+  const n = String(name || '').trim();
+  if (!n) { $('#lsave-name')?.focus(); return; }
+  const l = listNew(n);
+  saving.picked.add(l.id);
+  renderSave();
+  $('[data-lsave]').focus();
+  announce(`Lista „${l.name}” a fost creată și bifată.`);
+}
+function commitSave() {
+  const s = saving, key = keyOf(s.id, s.color || undefined);
+  const all = listsAll().map(l => {
+    const has = l.items.findIndex(([k]) => k === key);
+    if (s.picked.has(l.id)) { if (has >= 0) l.items[has][1] = s.q; else l.items.push([key, s.q]); }
+    else if (has >= 0) l.items.splice(has, 1);
+    return l;
+  });
+  listsSave(all);
+  const names = all.filter(l => s.picked.has(l.id)).map(l => `„${l.name}”`);
+  if (names.length) track('add_to_wishlist', { currency: 'RON', value: round2(unitPrice(s.id, s.q) * s.q), items: [gaItem(s.id, { list: 'lista_' + document.body.dataset.page }, s.q, s.color || undefined)] }, { lists: names.length });
+  close();
+  const msg = names.length ? `Salvat în ${names.join(', ')}, ${s.q} ${s.q === 1 ? 'bucată' : 'bucăți'}.` : 'Scos din liste.';
+  announce(msg);
+  showToast(`<i class="ph ph-heart" aria-hidden="true" style="font-size:24px;color:#fff;justify-self:center"></i><p class="toast__name">${msg}</p><a href="liste.html">Vezi listele</a>`);
+}
+document.addEventListener('click', e => {
+  const sv = e.target.closest('[data-save]');
+  if (sv) { e.preventDefault(); return openSave(sv.dataset.save, sv.dataset.saveColor, Number(sv.dataset.saveQ) || 0); }
+  if (!saving || !e.target.closest('#lsave')) return;
+  const qb = e.target.closest('[data-lsq]');
+  if (qb) { saving.q = Math.max(1, Math.min(9999, saving.q + Number(qb.dataset.lsq))); const i = $('#lsave-q'); i.value = saving.q; qb.parentElement.querySelector('[data-lsq="-1"]').disabled = saving.q <= 1; return; }
+  const sg = e.target.closest('[data-lsugg]');
+  if (sg) return createFromSheet(sg.dataset.lsugg);
+  if (e.target.closest('[data-lsave]')) return commitSave();
+});
+document.addEventListener('change', e => {
+  if (!saving) return;
+  if (e.target.matches('.lsave__list input')) { e.target.checked ? saving.picked.add(e.target.value) : saving.picked.delete(e.target.value); }
+  if (e.target.id === 'lsave-q') { saving.q = Math.max(1, Math.min(9999, Number(e.target.value.replace(/\D/g, '')) || 1)); e.target.value = saving.q; }
+});
+document.addEventListener('submit', e => { if (e.target.id === 'lsave-new') { e.preventDefault(); createFromSheet($('#lsave-name').value); } });
