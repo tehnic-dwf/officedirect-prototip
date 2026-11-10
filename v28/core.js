@@ -609,7 +609,7 @@ document.addEventListener('click', e => {
   const del = e.target.closest('[data-cart-del]');
   if (del) {
     const k = del.dataset.cartDel, [id, color] = k.split('|');
-    removed = { key: k, q: state.cart[k], name: color ? `${P[id].name}, ${color}` : P[id].name };
+    removed = { key: k, q: state.cart[k], i: Object.keys(state.cart).indexOf(k), name: color ? `${P[id].name}, ${color}` : P[id].name };
     setQty(k, 0, del);
     $('[data-cart-undo]')?.focus({ preventScroll: true });
     return;
@@ -617,6 +617,12 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-cart-undo]') && removed) {
     const r = removed; removed = null;
     setQty(r.key, r.q, null);
+    // Linia revine pe locul ei din coș, nu la final
+    const entries = Object.entries(state.cart).filter(([x]) => x !== r.key);
+    entries.splice(Math.max(0, r.i), 0, [r.key, r.q]);
+    state.cart = Object.fromEntries(entries);
+    store.set('cart', state.cart);
+    renderCart(false);
     $(`[data-cart-del="${r.key}"]`)?.focus({ preventScroll: true });
   }
 });
@@ -706,12 +712,14 @@ renderVatSwitches();
 
 /* ---------- Toast după adăugare (constatarea 34, M.079) ---------- */
 let toastTimer;
+let toastY = null;   // poziția paginii când a apărut mesajul
 const toastEl = $('#toast');
 const armToast = () => { clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, 6000); };
 function showToast(html) {
   toastEl.classList.remove('toast--note');
   toastEl.innerHTML = html;
   toastEl.hidden = false;
+  toastY = scrollY;
   toastEl.style.animation = 'none'; void toastEl.offsetWidth; toastEl.style.animation = '';
   armToast();
 }
@@ -727,6 +735,13 @@ function toast(id, color, q) {
 }
 function note(text) { announce(text); showToast(`<i class="ph ph-info" aria-hidden="true" style="font-size:24px;color:#fff;justify-self:center"></i><p class="toast__msg" style="grid-area:name">${text}</p>`); toastEl.classList.add('toast--note'); }
 function hideToast() { toastEl.hidden = true; }
+// În listă (categorie, căutare) mesajul stă peste butoanele produselor de dedesubt: la derulare dispare,
+// ca următorul „Adaugă” să fie liber (cine pune 10 produse în coș derulează între ele)
+addEventListener('scroll', () => {
+  if (toastEl.hidden || !['plp', 'serp', 'home'].includes(document.body.dataset.page)) { toastY = null; return; }
+  if (toastY === null) toastY = scrollY;
+  else if (Math.abs(scrollY - toastY) > 80) { hideToast(); toastY = null; }
+}, { passive: true });
 
 /* ---------- Alegerea culorii (M.029, PLP-28) ---------- */
 function openVariant(id, origin) {
@@ -942,7 +957,8 @@ cancelBtn.addEventListener('click', e => {
   closeSuggest();
   if (e.detail > 0) q.blur(); else refocusSearch();
 });
-findBtn.addEventListener('click', () => { openSuggest(); q.focus({ preventScroll: true }); });
+// Din iconița din header: cursorul ajunge la capătul termenului, ca un cuvânt nou să nu se lipească în fața celui vechi
+findBtn.addEventListener('click', () => { openSuggest(); q.focus({ preventScroll: true }); const n = q.value.length; q.setSelectionRange(n, n); });
 $('#search').addEventListener('submit', e => {
   if (!q.value.trim()) { e.preventDefault(); focusQuiet(); return; }
   saveSearch(q.value, 'tastat');
@@ -1008,6 +1024,25 @@ document.addEventListener('keydown', e => {
   const first = f[0], last = f[f.length - 1];
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
   else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
+// Câmpurile de cantitate pornesc cu o valoare („1”): la atingere se selectează tot, ca „5” scris să însemne 5, nu 15
+let qtyJustFocused = null;
+document.addEventListener('focusin', e => {
+  const i = e.target;
+  if (!i.matches?.('input[inputmode="numeric"]')) return;
+  qtyJustFocused = i;
+  setTimeout(() => { try { i.setSelectionRange(0, i.value.length); } catch {} }, 0);
+});
+// iOS mută cursorul la locul atingerii după focus: selectăm din nou, doar la prima atingere
+document.addEventListener('pointerup', e => {
+  const i = qtyJustFocused; qtyJustFocused = null;
+  if (i && e.target === i) setTimeout(() => { try { i.setSelectionRange(0, i.value.length); } catch {} }, 0);
+});
+// Enter în câmpul de cantitate din listă adaugă direct (tastaturile Android au Enter; iOS are butonul de lângă)
+document.addEventListener('keydown', e => {
+  const i = e.target.closest?.('[data-qa]');
+  if (i && e.key === 'Enter') { e.preventDefault(); i.closest('.qadd')?.querySelector('[data-addq]')?.click(); }
 });
 
 // iOS aplică :active doar dacă pagina ascultă atingerile

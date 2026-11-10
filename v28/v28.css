@@ -190,7 +190,9 @@ ul, ol { padding: 0; list-style: none; }
 .hero { position: relative; overflow: hidden; isolation: isolate; padding: 28px 0 24px; background: var(--secondary-900); color: #fff; }
 /* Primul ecran are stratul lui (isolation), deci bara de căutare deschisă (fixă) ar rămâne sub cardurile de mai jos.
    Cât e deschisă căutarea, stratul urcă peste conținut și peste sugestii (25), dar rămâne sub header (30) */
-.hero:has(.hsearch.is-open) { z-index: 26; }
+/* Cu căutarea deschisă, hero-ul nu mai face context de suprapunere: câmpul fix iese deasupra sugestiilor,
+   iar restul hero-ului (în S e înalt: căutare, categorii, blocul pentru firme) rămâne sub ele, nu le acoperă */
+.hero:has(.hsearch.is-open) { isolation: auto; z-index: auto; }
 .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; }
 .hero::before { width: 460px; height: 460px; right: -220px; top: -200px; background: radial-gradient(closest-side, rgb(167 74 152 / .5), transparent); }
 .hero::after { width: 420px; height: 420px; left: -240px; bottom: -160px; background: radial-gradient(closest-side, rgb(241 120 48 / .26), transparent); }
