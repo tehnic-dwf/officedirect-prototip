@@ -42,6 +42,25 @@ if (slot) {
 }
 document.querySelectorAll('[data-hero]').forEach(el => { if (el.dataset.hero !== HERO_V) el.remove(); });
 if (document.querySelector('.hb__search')) document.querySelector('.hb__search').append(document.getElementById('hsearch'));
+// Varianta „căutarea sus” (?cautare=sus, 11.11.2026, cerută de Georgiana): câmpul mare stă imediat sub header, deasupra pozei,
+// iar în locul lui, pe foaia albă de sub titlu, intră „Ai codurile produselor? Comandă rapidă după cod” (mutat, nu dublat).
+// La derulare rămâne la fel: când câmpul iese din ecran, apare iconița de căutare din header.
+if (HERO_V === 's' && document.documentElement.classList.contains('cs-sus')) {
+  const hero = document.querySelector('.hero--s');
+  const top = document.createElement('div');
+  top.className = 'hs-top';
+  hero.prepend(top);
+  top.append(document.getElementById('hsearch'));
+  const old = document.querySelector('.hf2__rapid');
+  const rapid = document.createElement('a');
+  rapid.className = 'hs-rapid';
+  rapid.href = 'comanda-rapida.html';
+  rapid.dataset.firma = 'hp_comanda_rapida';
+  rapid.innerHTML = '<span class="hs-rapid__ico"><i class="ph ph-lightning" aria-hidden="true"></i></span><span class="hs-rapid__t"><b>Ai codurile produselor?</b>Comandă rapidă după cod</span><span class="hs-rapid__go"><i class="ph ph-arrow-right" aria-hidden="true"></i></span>';
+  document.querySelector('.hero--s .hb__search')?.replaceWith(rapid);
+  old?.remove();
+  hero.querySelector('#q')?.setAttribute('placeholder', 'Caută produs, brand sau cod');
+}
 if (HERO_V === 'c') document.querySelector('#noutati #feature')?.remove();
 
 const savedTab = store.get('tab', 'hartie', sessionStorage);

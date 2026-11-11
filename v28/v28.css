@@ -1182,3 +1182,95 @@ sup { font-size: 13px; line-height: 0; vertical-align: super; }
 .plp__grid .card__tags { display: flex; }
 .plp__grid .card__tags .card__tag { display: inline-flex; margin-bottom: 0; }
 .plp__grid .mbadges { display: none; }
+
+/* ---------- Varianta „căutarea sus” (?cautare=sus, 11.11.2026) ----------
+   Căutarea mare, imediat sub header, într-o ramă dublă (rama lila + câmpul alb), cu umbră difuză; butonul portocaliu e al căutării.
+   Pe foaia albă de sub titlu: „Comandă rapidă după cod”, ca un card cu săgeata în cerc. La derulare: neschimbat. */
+.cs-sus .hs-top { position: relative; z-index: 2; padding: 6px var(--gutter) 14px; background: #fff; }
+.cs-sus .hs-top .hsearch { height: 64px; }
+.cs-sus .hs-top .hsearch:not(.is-open) .hsearch__in { padding: 0; background: none; }
+.cs-sus .hs-top .hsearch:not(.is-open) .search { height: 56px; grid-template-columns: 1fr 56px; border-radius: 18px; box-shadow: inset 0 0 0 1.5px var(--secondary-900), 0 0 0 5px var(--secondary-tint), 0 16px 32px -20px rgb(42 22 64 / .55); transition: box-shadow .4s cubic-bezier(.32, .72, 0, 1); }
+.cs-sus .hs-top .hsearch:not(.is-open) .search__input { height: 56px; padding-left: 18px; font-size: 17px; }
+.cs-sus .hs-top .hsearch:not(.is-open) .search__go { width: 56px; height: 56px; border-radius: 0 18px 18px 0; }
+.cs-sus .hs-top .hsearch:not(.is-open) .search__go .ph { font-size: 24px; }
+.cs-sus .hs-top .hsearch:not(.is-open) .search__clear { height: 56px; right: 56px; }
+.cs-sus .hero--s .hs__photo { height: 160px; }
+/* Comanda rapidă: card lila pe foaia albă, iconiță în cerc, săgeata în propriul cerc (buton în buton) */
+.hs-rapid { display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px; align-items: center; gap: 12px; margin: 0 var(--gutter); padding: 10px 10px 10px 10px; border-radius: 20px; background: var(--secondary-tint); box-shadow: inset 0 0 0 1px var(--secondary-200); color: var(--secondary-900); text-decoration: none; transition: transform .45s cubic-bezier(.32, .72, 0, 1); }
+.hs-rapid:active { transform: scale(.98); }
+.hs-rapid__ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #fff; box-shadow: 0 6px 14px -10px rgb(42 22 64 / .5); }
+.hs-rapid__ico .ph { font-size: 22px; color: var(--secondary); }
+.hs-rapid__t { display: grid; gap: 1px; font-size: 15px; line-height: 1.3; color: var(--ink-2); }
+.hs-rapid__t b { font-size: 16px; font-weight: 650; color: var(--secondary-900); }
+.hs-rapid__go { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--secondary); color: #fff; transition: transform .45s cubic-bezier(.32, .72, 0, 1); }
+.hs-rapid__go .ph { font-size: 18px; }
+@media (hover: hover) { .hs-rapid:hover .hs-rapid__go { transform: translateX(3px); } }
+.cs-sus .hero--s .hp__sheet { padding-top: 22px; }
+/* Iconița de căutare din header, când câmpul iese din ecran: buton plin (culoarea e mai jos, mov), care „sare” o dată la apariție */
+.cs-sus .hdr__find { width: 44px; height: 44px; margin-right: 0; border-radius: 14px; }
+.cs-sus .hdr__find .ph { font-size: 22px; }
+.cs-sus .hdr.is-compact:not(.is-searching) .hdr__find { animation: find-pop .6s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes find-pop { 0% { transform: scale(.6); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .cs-sus .hdr.is-compact:not(.is-searching) .hdr__find { animation: none; } .hs-rapid, .hs-rapid__go { transition: none; } }
+@media (max-width: 340px) {
+  .cs-sus .hero--s .hs__photo { height: 136px; }
+  .hs-rapid { grid-template-columns: minmax(0, 1fr) 36px; padding: 10px 10px 10px 14px; }
+  .hs-rapid__ico { display: none; }
+  .hs-rapid__t { font-size: 14px; }
+  .hs-rapid__t b { font-size: 15px; }
+  .hs-rapid__go { width: 36px; height: 36px; }
+}
+
+/* ===================== „Căutarea sus”: căutarea nouă și variantele zonei cu poza (11.11.2026) =====================
+   Căutarea: o singură zonă albă cu headerul; câmp plin, gri-lila deschis, fără contur greu; butonul portocaliu e o pastilă
+   în interiorul câmpului (portocaliul e al căutării). Deschisă, căutarea arată ca până acum (stilul de mai jos e doar pentru :not(.is-open)). */
+html.cs-sus .hs-top { padding: 2px var(--gutter) 14px; background: #fff; }
+html.cs-sus .hs-top .hsearch { height: 54px; }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search { height: 54px; grid-template-columns: 1fr 54px; border-radius: 16px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .4s cubic-bezier(.32, .72, 0, 1), background-color .4s cubic-bezier(.32, .72, 0, 1); }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search__input { height: 54px; padding-left: 18px; font-size: 16px; }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search__input::placeholder { color: var(--ink-2); }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search__go { width: 46px; height: 46px; margin: 4px; border-radius: 12px; box-shadow: 0 6px 14px -8px rgb(241 120 48 / .8); }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search__go .ph { font-size: 22px; }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search__clear { height: 54px; right: 54px; }
+html.cs-sus .hs-top .hsearch:not(.is-open) .search:active { background: #fff; box-shadow: inset 0 0 0 1.5px var(--secondary); }
+/* Iconița de căutare din header (11.11.2026, corectat): doar deschide căutarea, deci e navigare, nu trimitere.
+   Criteriile DWF: portocaliul e pentru butonul care trimite căutarea și pentru cumpărare; o singură acțiune primară pe ecran (H-22).
+   Pe mov plin (secundara, ca acțiunile importante care nu sunt cumpărare), iconița albă: se vede pe headerul alb, fără să concureze cu „Adaugă în coș” */
+.cs-sus .hdr__find { background: var(--secondary-tint); color: var(--secondary); box-shadow: inset 0 0 0 1px var(--secondary-200); }
+.cs-sus .hdr__find:active { background: var(--secondary-200); }
+/* Aleasă: lila deschis (varianta 3 din ?lupa), pe toate paginile; mov plin stătea lângă numărul mov de pe coș și se băteau */
+
+/* ===================== Variante pentru iconița de căutare din header (?lupa=1..6, 11.11.2026) =====================
+   Rolurile culorilor: portocaliul rămâne al cumpărării și al trimiterii căutării; iconița doar deschide căutarea (navigare).
+   Lângă ea stă numărul de pe coș, un cerc mov plin: o iconiță tot mov plin face două pete mov alăturate. */
+html[class*="lupa-"] .hdr__find { width: 44px; height: 44px; margin-right: 0; border-radius: 14px; box-shadow: none; }
+html[class*="lupa-"] .hdr__find .ph { font-size: 22px; }
+/* 1. Simplă: doar linia, ca celelalte iconițe din header */
+html.lupa-1 .hdr__find { background: none; color: var(--ink); }
+html.lupa-1 .hdr__find .ph { font-size: 26px; }
+/* 2. Mov plin, iconiță albă */
+html.lupa-2 .hdr__find { background: var(--secondary); color: #fff; box-shadow: 0 8px 18px -10px rgb(93 54 139 / .75); }
+/* 3. Lila deschis: fundal lila, iconiță mov, contur fin */
+html.lupa-3 .hdr__find, html.lupa-6 .hdr__find { background: var(--secondary-tint); color: var(--secondary); box-shadow: inset 0 0 0 1px var(--secondary-200); }
+html.lupa-3 .hdr__find:active, html.lupa-6 .hdr__find:active { background: var(--secondary-200); }
+/* 4. Contur mov pe alb */
+html.lupa-4 .hdr__find { background: #fff; color: var(--secondary); box-shadow: inset 0 0 0 1.5px var(--secondary); }
+/* 5. Pastilă cu text „Caută”: eticheta spune ce face; logo puțin mai mic, ca să încapă */
+html.lupa-5 .hdr { grid-template-columns: 44px 1fr auto 44px 44px; }
+html.lupa-5 .hdr__logo img { width: 128px; }
+html.lupa-5 .hdr__find { display: inline-flex; align-items: center; gap: 6px; width: auto; padding: 0 14px 0 11px; border-radius: 999px; background: var(--secondary-tint); color: var(--secondary-900); box-shadow: inset 0 0 0 1px var(--secondary-200); font-size: 15px; font-weight: 600; }
+html.lupa-5 .hdr__find .ph { font-size: 20px; color: var(--secondary); }
+html.lupa-5 .hdr__find::after { content: "Caută"; }
+/* 6. Câmp în header: după derulare, pe homepage și pe rezultate, logoul face loc unui câmp de căutare (arată ca un câmp, se atinge ca un câmp).
+   Pe paginile unde headerul e mereu compact (categorie, produs), logoul rămâne, iar iconița e ca la 3 */
+html.lupa-6 body:is([data-page="home"], [data-page="serp"]) .hdr.is-compact:not(.is-searching) .hdr__logo { display: none; }
+html.lupa-6 body:is([data-page="home"], [data-page="serp"]) .hdr.is-compact:not(.is-searching) .hdr__find { grid-column: 2 / 4; justify-self: stretch; display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: auto; margin: 0 4px 0 2px; padding: 0 14px; background: var(--mist); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); font-size: 15px; font-weight: 400; }
+html.lupa-6 body:is([data-page="home"], [data-page="serp"]) .hdr.is-compact:not(.is-searching) .hdr__find .ph { color: var(--secondary); font-size: 20px; }
+html.lupa-6 body:is([data-page="home"], [data-page="serp"]) .hdr.is-compact:not(.is-searching) .hdr__find::after { content: "Caută produs sau cod"; white-space: nowrap; }
+@media (max-width: 340px) {
+  html.lupa-5 .hdr { grid-template-columns: 44px 1fr 44px 44px 44px; }
+  html.lupa-5 .hdr__logo img { width: 150px; }
+  html.lupa-5 .hdr__find { width: 44px; padding: 0; justify-content: center; border-radius: 14px; }
+  html.lupa-5 .hdr__find::after { content: none; }
+}
+.card__per .nw { white-space: nowrap; }

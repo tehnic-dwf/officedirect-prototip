@@ -180,7 +180,8 @@ const dateFmt = new Intl.DateTimeFormat('ro-RO', { weekday: 'long', day: 'numeri
 
 // Prețul pe 100 de coli (sau pe bucată) stă lipit de prețul mare, ca „adică …”: e același preț, socotit altfel, nu un preț redus.
 // Se recalculează când alegi un prag de volum, ca să nu contrazică pragurile (PDP-12)
-const unitLine = price => `adică ${perUnit(p, price).replace('/', ' / ')}`;
+// Ambalajul stă lângă preț, nu doar la specificații (audit, constatarea 16): „Bax de 20 de seturi · adică 5,99 lei / set”
+const unitLine = price => `${p.unit && p.unit !== '1 bucată' && !p.sheets ? `${p.unit} · ` : ''}adică ${perUnit(p, price).replace('/', ' / ')}`;
 function priceHTMLpdp() {
   const off = p.old ? Math.floor((1 - base / p.old) * 100) : 0;
   const ends = D.promoEnd && new Date(D.promoEnd + 'T23:59:59') > new Date() ? new Intl.DateTimeFormat('ro-RO', { day: 'numeric', month: 'long' }).format(new Date(D.promoEnd)) : '';

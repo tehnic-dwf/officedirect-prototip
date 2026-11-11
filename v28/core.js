@@ -249,11 +249,15 @@ function wasHTML(p) {
   const off = Math.floor((1 - p.price / p.old) * 100);
   return `<s class="price__old"><span class="sr-only">preț anterior </span>${pLei(p.old)}</s><span class="price__off"><span class="sr-only">reducere </span>-${off}%</span>`;
 }
+// Unitatea de vânzare lângă preț (audit, constatarea 16, PLP-26): „5,99 lei/set · bax de 20”, ca prețul mare al baxului
+// să nu fie comparat cu prețul unui set de alături
+// La hârtie, „500 coli” e deja în atribute: nu-l repetăm
+const packOf = p => { if (p.sheets) return ''; const m = p.unit?.match(/^(Set|Top|Cutie|Bax|Pachet) de ([\d.]+)/); return m ? `${m[1].toLowerCase()} de ${m[2]}` : ''; };
 function priceHTML(id) {
   const p = P[id];
   // Un singur preț, cu baza scrisă lângă el; dedesubt reducerea (în aceeași bază), apoi prețul pe unitate, gri
   return `<p class="price"><span class="price__main">${money.format(vatPrice(p.price))} <small>lei</small></span>${vatTag()}</p>${p.old ? `<p class="price__was">${wasHTML(p)}</p>` : ''}
-    ${p.per ? `<p class="card__per">${perUnit(p)}</p>` : ''}${volHTML(p)}${stockHTML(p)}`;
+    ${p.per ? `<p class="card__per"><span class="nw">${perUnit(p)}</span>${packOf(p) ? ` · <span class="nw">${packOf(p)}</span>` : ''}</p>` : ''}${volHTML(p)}${stockHTML(p)}`;
 }
 // Prețul de volum pe card: un rând de informație, fără buton (council 03.11.2026, P1). Cantitatea se alege pe pagina produsului;
 // un buton „+ Adaugă 50” punea ~1.200 lei în coș dintr-o atingere (M.029, PLP-28). Același termen ca pe pagina produsului (G-37)
@@ -325,6 +329,10 @@ const inStock = id => P[id].stock !== 0;
 // Pentru comparație rămân ?eticheta=a (sub nume și sub preț), b (pe poză, jos), d (bandă sus pe poză)
 const BADGE_V = /^[abcd]$/.test(params.get('eticheta')) ? params.get('eticheta') : 'c';
 document.documentElement.classList.add('be-' + BADGE_V);
+// Variantele iconiței de căutare din header (11.11.2026): ?lupa=1..6, rămâne cât navighezi; ?lupa=0 revine la implicit
+if (params.has('lupa')) store.set('lupa', params.get('lupa'), sessionStorage);
+// Implicit 3 (lila deschis), aleasă de Georgiana pe 11.11.2026; celelalte rămân pentru comparație
+{ const l = store.get('lupa', null, sessionStorage); document.documentElement.classList.add('lupa-' + (/^[1-6]$/.test(l) ? l : '3')); }
 // Varianta de contrast, de comparat: ?contrast=1 o pornește, ?contrast=0 o oprește; rămâne activă cât navighezi în sesiune
 if (params.has('contrast')) store.set('contrast', params.get('contrast') === '1', sessionStorage);
 if (store.get('contrast', false, sessionStorage)) document.documentElement.classList.add('hi-ct');
@@ -373,7 +381,8 @@ function cardHTML(id, index, list) {
   // În „Nou în catalog” pragul lipsește: lista e pentru descoperire, iar un singur prag lăsa gol sub toate butoanele (M.005).
   // Numele și atributele stau în același rând, ca un nume pe două rânduri la vecin să nu lase o gaură între nume și atribute
   // Câte culori are produsul, ca text neutru în atribute, nu ca etichetă (M.167)
-  const meta = p.meta ?? [p.brand || p.sub, shortUnit(p.unit), p.colors && cate(p.colors.length, 'culori')].filter(Boolean).join(' · ');
+  // Ambalajul nu se mai repetă în atribute când stă deja sub preț, lângă prețul pe unitate
+  const meta = p.meta ?? [p.brand || p.sub, !(p.per && packOf(p)) && shortUnit(p.unit), p.colors && cate(p.colors.length, 'culori')].filter(Boolean).join(' · ');
   return `<li class="card${p.stock === 0 ? ' is-out' : ''}" data-card="${id}" data-index="${index}">
     <div class="card__media">
       <a class="card__img" href="${url}" data-select="${id}" tabindex="-1" aria-hidden="true">
