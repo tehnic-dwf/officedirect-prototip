@@ -96,7 +96,10 @@ const CODES = {
 };
 for (const [id, c] of Object.entries(CODES)) if (P[id] && !P[id].code) P[id].code = c;
 const byCode = code => Object.keys(P).find(id => P[id].code === code);
-// „Cel mai vândut” rămâne pe un singur produs din fiecare categorie: primul după vânzări (rank).
+// Produsele aduse din categorie (plp-data.js) nu au ambalajul scris: hârtia e „Top de 500 de coli”, restul „1 bucată”.
+// Fără asta, coșul, alegerea culorii și listele se opreau cu eroare la aceste produse (11.11.2026: mesajul „Adăugat în coș” nu mai apărea)
+for (const p of Object.values(P)) if (!p.unit) p.unit = p.sheets ? `Top de ${new Intl.NumberFormat('ro-RO').format(p.sheets)} de coli` : '1 bucată';
+// „Top vânzări” (pe homepage) rămâne pe un singur produs din fiecare categorie: primul după vânzări (rank).
 // Cu trei produse etichetate în aceeași listă, eticheta nu mai ajută la ales (verificarea din 10.11.2026).
 {
   const top = {};
@@ -313,7 +316,7 @@ const shortUnit = u => u === '1 bucată' ? '' : u.replace(/^\S+ de ([\d.]+)(?: d
    Nimic peste poză: fiecare informație stă lângă ce explică.
    - Reducerea: lângă prețul tăiat („-11%”). Se calculează din prețul de referință (cel mai mic din ultimele 30 de zile).
    - Stocul: sub preț, lângă buton („Ultimele 3 buc. în stoc”, doar sub 6 bucăți reale; „Stoc epuizat”).
-   - „Cel mai vândut” (top 3 în categorie după bucăți vândute în ultimele 30 de zile) sau „Nou” (intrat în ultimele 90 de zile): un rând mic sub nume,
+   - „Top vânzări” (top 3 în categorie după bucăți vândute în ultimele 30 de zile) sau „Nou” (intrat în ultimele 90 de zile): un rând mic sub nume,
      ca numele să rămână aliniate între carduri. */
 const LOW_STOCK = 5;
 // Produsele epuizate nu apar în nicio listă de pe homepage (M.014, H-07, PLP-30); „Stoc epuizat” rămâne doar în căutare și pe pagina produsului
@@ -325,29 +328,35 @@ document.documentElement.classList.add('be-' + BADGE_V);
 // Varianta de contrast, de comparat: ?contrast=1 o pornește, ?contrast=0 o oprește; rămâne activă cât navighezi în sesiune
 if (params.has('contrast')) store.set('contrast', params.get('contrast') === '1', sessionStorage);
 if (store.get('contrast', false, sessionStorage)) document.documentElement.classList.add('hi-ct');
-// O singură etichetă pe poză (B, C, D), în ordinea: epuizat, ultimele bucăți, cel mai vândut, nou.
-// `list` e lista în care stă cardul: în „Cele mai cumpărate” nu repetăm „Cel mai vândut”, în „Nou în catalog” nu repetăm „Nou”
-function badgeOf(p, list) {
-  if (p.stock === 0) return ['out', 'Stoc epuizat'];
-  if (p.stock > 0 && p.stock <= LOW_STOCK) return ['low', `Ultimele ${p.stock} buc.`];
-  if (p.best && list !== 'best') return ['best', 'Cel mai vândut'];
-  if (p.isNew && !p.best && list !== 'new') return ['new', 'Nou'];
-  return null;
+// Etichetele de produs (11.11.2026): cel mult două pe card, pline, ca să se vadă la derulare.
+// Prima spune starea sau motivul (în ordinea: epuizat, ultimele bucăți, top vânzări, nou), a doua prețul de volum (B2B).
+// „Top vânzări”: primele 3 după vânzări în categorie (rank, ordinea „cele mai vândute” de pe site) sau produsul marcat pe homepage.
+// `list` e lista în care stă cardul: în „Cele mai cumpărate” nu repetăm „Top vânzări”, în „Nou în catalog” nu repetăm „Nou”
+const IN_LIST = ['plp', 'serp'].includes(document.body.dataset.page);
+function badgesOf(p, list) {
+  if (p.stock === 0) return [['out', 'Stoc epuizat']];
+  const out = [];
+  if (p.stock > 0 && p.stock <= LOW_STOCK) out.push(['low', `Ultimele ${p.stock} buc.`]);
+  else if ((p.best || (IN_LIST && p.rank != null && p.rank <= 2)) && list !== 'best') out.push(['best', 'Top vânzări']);
+  else if (p.isNew && list !== 'new') out.push(['new', 'Nou']);
+  if (p.tiers && list !== 'new') out.push(['vol', 'Preț de volum']);
+  return out.slice(0, 2);
 }
-// În lista din categorie și căutare, poza e mică: eticheta stă ca text deasupra numelui, nu peste produs
+const badgeOf = (p, list) => badgesOf(p, list)[0] || null;
+// În lista din categorie și căutare, poza e mică: etichetele stau deasupra numelui, nu peste produs
 function tagHTML(p, list) {
-  const l = badgeOf(p, list);
-  return l ? `<span class="card__tag flag--${l[0]}">${l[1]}</span>` : '';
+  const l = badgesOf(p, list);
+  return l.length ? `<p class="card__tags">${l.map(([k, t]) => `<span class="card__tag flag--${k}">${t}</span>`).join('')}</p>` : '';
 }
 function mediaBadgeHTML(p, list) {
   if (BADGE_V === 'a') return '';
-  const l = badgeOf(p, list);
-  return l ? `<span class="mbadge flag--${l[0]}">${l[1]}</span>` : '';
+  const l = badgesOf(p, list);
+  return l.length ? `<span class="mbadges">${l.map(([k, t]) => `<span class="mbadge flag--${k}">${t}</span>`).join('')}</span>` : '';
 }
 function flagHTML(p, list) {
   if (BADGE_V !== 'a' && !document.body.matches('[data-page="pdp"]')) return '';
   if (p.stock === 0) return '';
-  if (p.best && list !== 'best') return '<p class="card__flag"><span class="flag flag--best">Cel mai vândut</span></p>';
+  if (p.best && list !== 'best') return '<p class="card__flag"><span class="flag flag--best">Top vânzări</span></p>';
   if (p.isNew && !p.best && list !== 'new') return '<p class="card__flag"><span class="flag flag--new">Nou</span></p>';
   return '';
 }
@@ -398,7 +407,12 @@ function refreshCard(id, before) {
   $$(`[data-buy="${id}"]`).forEach(el => {
     if (p.colors) { el.innerHTML = buyHTML(id); return; }
     const step = $('.step', el);
-    if (!q || !before || !step) { el.innerHTML = buyHTML(id); return; }
+    if (!q || !before || !step) {
+      el.innerHTML = buyHTML(id);
+      // Confirmarea stă și pe card, acolo unde ai apăsat: câmpul cu cantitatea se aprinde scurt
+      if (q && !before) { const s = $('.step', el); if (s) { s.classList.add('is-added'); setTimeout(() => s.classList.remove('is-added'), 1600); } }
+      return;
+    }
     const inp = $('[data-qty]', step);
     if (document.activeElement !== inp) inp.value = q;
     const dec = $('[data-dec]', step);
@@ -668,13 +682,15 @@ const subHref = (cat, s) => s.endsWith('.html') ? s : s.startsWith('/') ? SITE +
 function menuHTML() {
   const here = document.body.dataset.page;
   const shortcuts = [
-    ['comanda-rapida.html', 'ph-lightning', 'Comandă rapidă după cod', 'Lipești codurile, pui tot în coș', here === 'rapid'],
-    ['liste.html', 'ph-heart', 'Listele mele', 'Ce comanzi des, comandat dintr-o dată', here === 'liste'],
+    // O singură intrare pentru „comand din nou ce comand des”: codurile, listele și comenzile vechi stau în aceeași pagină, pe file.
+    // Listele se administrează la „Cont și ajutor” (ca la Amazon Business: comanzi dintr-un loc, modifici listele din cont)
+    ['comanda-rapida.html', 'ph-lightning', 'Comandă rapidă', 'După cod, din listele tale sau din comenzile vechi', here === 'rapid'],
     [IS_HOME ? '#noutati' : 'index.html#noutati', 'ph-sparkle', 'Nou în catalog', 'Produse adăugate recent'],
     [SITE + 'index.php?route=product/special', 'ph-tag', 'Oferte', 'Reduceri și prețuri de volum'],
   ];
   const help = [
     [IS_HOME ? '#firme' : 'index.html#firme', 'ph-buildings', 'Pentru firme'],
+    ['liste.html', 'ph-heart', 'Listele mele', '', here === 'liste'],
     [SITE + 'index.php?route=account/order', 'ph-package', 'Comenzile mele'],
     [SITE + 'livrare', 'ph-truck', 'Livrare și retur'],
     ['#', 'ph-chat-circle-dots', 'Ajutor: telefon și chat', 'sheet-ajutor'],
@@ -725,22 +741,26 @@ function showToast(html) {
 }
 ['pointerenter', 'focusin', 'touchstart'].forEach(ev => toastEl.addEventListener(ev, () => clearTimeout(toastTimer), { passive: true }));
 ['pointerleave', 'focusout'].forEach(ev => toastEl.addEventListener(ev, armToast));
+// Mesajul spune întâi ce s-a întâmplat („Adăugat în coș”), apoi ce și cât; bara arată cât mai e până la livrarea gratuită
+// (niciun concurent verificat pe 11.11.2026 nu arată progresul livrării gratuite la adăugare)
 function toast(id, color, q) {
   const { total } = cartTotals();
   const m = shipMessage(total);
+  const goal = total < SHIP_BUC ? SHIP_BUC : SHIP_RO;
+  const pct = Math.min(100, Math.round(total / goal * 100));
   showToast(`<img src="${img(id)}" alt="" width="44" height="44">
-    <p class="toast__name">${q > 1 ? `${q} × ` : ''}${esc(P[id].name)}${color ? `, ${color}` : ''}</p>
+    <p class="toast__name"><span class="toast__ok"><i class="ph ph-check-circle" aria-hidden="true"></i>Adăugat în coș</span><span class="toast__item">${q > 1 ? `${q} × ` : ''}${esc(P[id].name)}${color ? `, ${color}` : ''}</span></p>
     <a href="#" data-open="sheet-cos">Vezi coșul</a>
-    <p class="toast__msg">${m.short}</p>`);
+    <div class="toast__ship"><span class="toast__bar" aria-hidden="true"><i style="width:${m.done ? 100 : pct}%"></i></span><p class="toast__msg">${m.short}</p></div>`);
 }
 function note(text) { announce(text); showToast(`<i class="ph ph-info" aria-hidden="true" style="font-size:24px;color:#fff;justify-self:center"></i><p class="toast__msg" style="grid-area:name">${text}</p>`); toastEl.classList.add('toast--note'); }
 function hideToast() { toastEl.hidden = true; }
-// În listă (categorie, căutare) mesajul stă peste butoanele produselor de dedesubt: la derulare dispare,
-// ca următorul „Adaugă” să fie liber (cine pune 10 produse în coș derulează între ele)
+// Mesajul stă sus, sub header (11.11.2026): nu mai acoperă butoanele de dedesubt; dispare după ce derulezi
+// cam o jumătate de ecran, ca să nu rămână peste filtre cât cauți mai departe
 addEventListener('scroll', () => {
   if (toastEl.hidden || !['plp', 'serp', 'home'].includes(document.body.dataset.page)) { toastY = null; return; }
   if (toastY === null) toastY = scrollY;
-  else if (Math.abs(scrollY - toastY) > 80) { hideToast(); toastY = null; }
+  else if (Math.abs(scrollY - toastY) > 320) { hideToast(); toastY = null; }
 }, { passive: true });
 
 /* ---------- Alegerea culorii (M.029, PLP-28) ---------- */

@@ -11,21 +11,26 @@ const PAGE = 24;
 
 /* ---------- Filtre: aceleași valori pe care le arată cardul (M.033) ---------- */
 const inRange = (n, a, b) => n >= a && n <= b;
+// Ordinea urmează căutările din GA4 (12 luni, 05.11.2026): formatul (A4 ~41.000, A3 ~10.700 de afișări de rezultate),
+// apoi gramajul (~4.600) și prețul; clasa, brandul și hârtia reciclată sunt căutate rar, dar clasa e pe fiecare card, deci se filtrează.
+// „Disponibilitate” a ieșit: 81 din 82 de produse sunt în stoc, filtrul nu împărțea nimic (epuizatele stau oricum la final).
 const FACETS = [
   { key: 'fmt', label: 'Format', kind: 'pills', values: [['A4', 'A4'], ['A3', 'A3'], ['A5', 'A5']], test: (p, v) => p.fmt === v },
+  // Fără paragraf de explicație (11.11.2026, „prea mult text”): fiecare valoare spune scurt la ce folosește, pe același rând
   { key: 'gsm', label: 'Gramaj', kind: 'rows',
-    hint: 'Gramajul arată cât de groasă e coala. 80 g/mp e hârtia obișnuită de imprimantă.',
-    values: [['70-80', '70-80 g/mp', 'Hârtie obișnuită de birou'], ['90-120', '90-120 g/mp', 'Mai rigidă, pentru oferte și prezentări'], ['160-250', '160-250 g/mp', 'Carton subțire, pentru coperți'], ['280-350', '280-350 g/mp', 'Carton gros, pentru diplome și invitații']],
+    values: [['70-80', '70-80 g/mp', 'de birou'], ['90-120', '90-120 g/mp', 'pentru oferte'], ['160-250', '160-250 g/mp', 'carton subțire'], ['280-350', '280-350 g/mp', 'carton gros']],
     test: (p, v) => { const [a, b] = v.split('-').map(Number); return inRange(p.gsm, a, b); } },
-  { key: 'pack', label: 'Coli în top', kind: 'pills', values: [['125-150', '125-150'], ['200-250', '200-250'], ['500', '500'], ['1000', '1.000']],
-    test: (p, v) => { const [a, b = a] = v.split('-').map(Number); return inRange(p.sheets, a, b); } },
-  { key: 'tip', label: 'Tip', kind: 'rows', values: [['alba', 'Albă'], ['reciclata', 'Reciclată']],
-    test: (p, v) => v === 'reciclata' ? p.recycled : !p.recycled },
-  { key: 'vol', label: 'Pentru firme', kind: 'rows', values: [['da', 'Cu preț de volum', 'Prețul pe top scade de la 25-50 de topuri']], test: p => !!p.tiers },
-  { key: 'brand', label: 'Brand', kind: 'rows', collapse: 6, values: [], test: (p, v) => p.brand === v },
+  // „Clasa hârtiei”, nu „clasa de alb”: așa scrie pe card („clasa A”) și așa o numește și BNB
+  { key: 'cls', label: 'Clasa hârtiei', kind: 'rows',
+    values: [['A', 'Clasa A', 'cea mai albă'], ['B', 'Clasa B', 'uz zilnic'], ['C', 'Clasa C', 'economică']],
+    test: (p, v) => p.cls === v },
   { key: 'pret', get label() { return `Preț ${vatLabel()}`; }, kind: 'rows', values: [['0-25', 'Sub 25 lei'], ['25-50', '25-50 lei'], ['50-100', '50-100 lei'], ['100-9999', 'Peste 100 lei']],
     test: (p, v) => { const [a, b] = v.split('-').map(Number); return vatPrice(p.price) >= a && vatPrice(p.price) < b; } },
-  { key: 'stoc', label: 'Disponibilitate', kind: 'rows', values: [['da', 'Doar produse în stoc']], test: p => p.stock !== 0 },
+  { key: 'vol', label: 'Pentru firme', kind: 'rows', values: [['da', 'Cu preț de volum', 'de la 25-50 de topuri']], test: p => !!p.tiers },
+  { key: 'brand', label: 'Brand', kind: 'rows', collapse: 6, values: [], test: (p, v) => p.brand === v },
+  { key: 'pack', label: 'Coli în top', kind: 'pills', values: [['125-150', '125-150'], ['200-250', '200-250'], ['500', '500'], ['1000', '1.000']],
+    test: (p, v) => { const [a, b = a] = v.split('-').map(Number); return inRange(p.sheets, a, b); } },
+  { key: 'tip', label: 'Hârtie reciclată', kind: 'rows', values: [['reciclata', 'Doar hârtie reciclată']], test: p => p.recycled },
   // Clientul cu cont: produsele pe care le-a mai comandat (nu apare în foaia de filtre, doar ca alegere rapidă)
   { key: 'mine', label: 'Comandate de tine', kind: 'hidden', values: [['da', 'Comandate de tine']], test: p => PURCHASED.some(k => P[k] === p) },
 ];
@@ -126,7 +131,8 @@ function render() {
   const total = all.length;
   const list = all.slice(0, shown);
   // Sortată după vânzări, lista spune deja care sunt cele mai vândute: eticheta nu se mai repetă pe fiecare card (M.167)
-  grid.innerHTML = list.map((id, i) => cardHTML(id, i + 1, sort === 'best' ? 'best' : undefined) + (i === B2B_AFTER - 1 && total > B2B_AFTER && !member ? b2bTile : '')).join('');
+  // Eticheta „Top vânzări” rămâne și când lista e ordonată după vânzări: la derulare, ajută să vezi primele trei (cerut 11.11.2026)
+  grid.innerHTML = list.map((id, i) => cardHTML(id, i + 1) + (i === B2B_AFTER - 1 && total > B2B_AFTER && !member ? b2bTile : '')).join('');
   observePromo();
   observeCards(grid);
   const n = activeCount(sel);
@@ -219,7 +225,8 @@ document.addEventListener('click', e => {
 
 /* ---------- Foaia de filtre: alegi mai multe, vezi câte rămân, aplici o dată (M.039, PLP-10) ---------- */
 const filtersEl = $('#filters');
-const openGroups = new Set(['fmt', 'gsm', 'pack', 'tip', 'vol', 'brand']);
+// Deschise sunt doar primele trei, după căutări: foaia încape în două ecrane, iar grupele închise arată câte filtre ai ales în ele
+const openGroups = new Set(['fmt', 'gsm', 'cls']);
 let brandsAll = false, brandQuery = '';
 
 function renderFilters() {

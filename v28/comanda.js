@@ -305,6 +305,8 @@ function selectTab(tab) {
   $$('.qo__tabs [role="tab"]').forEach(t => { const on = t === tab; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; $('#' + t.getAttribute('aria-controls')).hidden = !on; });
   tab.focus();
 }
+// Un link cu #liste deschide direct a doua filă (listele tale și comenzile de dinainte)
+if (location.hash === '#liste' && !params.get('lista') && !params.get('coduri')) { selectTab($('#tab-ist')); $('#tab-ist').blur(); scrollTo(0, 0); }
 $('.qo__tabs').addEventListener('keydown', e => {
   const tabs = $$('.qo__tabs [role="tab"]'), i = tabs.indexOf(document.activeElement);
   if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); return selectTab(e.key === 'Home' ? tabs[0] : tabs[tabs.length - 1]); }

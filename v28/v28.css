@@ -1139,3 +1139,46 @@ sup { font-size: 13px; line-height: 0; vertical-align: super; }
   .hs__ico { width: 28px; height: 28px; border-radius: 8px; }
   .hero--s .hs__proofs .hs__ico .ph { font-size: 16px; }
 }
+
+/* Mesajul de după adăugare (11.11.2026): spune clar „Adăugat în coș”, apoi produsul; dedesubt, progresul spre livrarea gratuită */
+.toast { gap: 6px 12px; padding: 12px 10px 12px 12px; box-shadow: 0 18px 40px -12px rgb(20 10 32 / .55), 0 0 0 1px rgb(255 255 255 / .08); }
+.toast__name { display: grid; gap: 1px; min-width: 0; white-space: normal; }
+.toast__ok { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: #8FE0B0; }
+.toast__ok .ph { font-size: 16px; }
+.toast__item { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toast__ship { grid-area: msg; display: grid; gap: 6px; padding-top: 2px; }
+.toast__bar { display: block; height: 4px; border-radius: 4px; background: rgb(255 255 255 / .16); overflow: hidden; }
+.toast__bar i { display: block; height: 100%; border-radius: 4px; background: #8FE0B0; transition: width .5s var(--ease-out); }
+.toast--note .toast__ship { display: none; }
+.toast__ship .toast__msg { grid-area: auto; }
+/* Confirmarea pe card: câmpul cu cantitatea se aprinde scurt în verde */
+.step.is-added { box-shadow: inset 0 0 0 1.5px var(--green), 0 0 0 3px rgb(29 122 75 / .25); transition: box-shadow .2s var(--ease); }
+
+/* S, primul ecran mai liniștit (11.11.2026): rândul „Căutate des” de sub căutare dublă pătratele de categorii
+   (Hârtie A4 / Hârtie, Toner / Toner) și apare oricum când atingi căutarea. Rămân căutarea și categoriile, o singură navigare. */
+.hero--s .he__chips { display: none; }
+.hero--s .hs__cats { margin-top: 14px; }
+/* Mai puține grosimi de font: 600 pentru titlurile mici, 700 doar pentru titlul mare */
+.hero--s .hs__proofs b { font-weight: 600; }
+/* Mesajul de după adăugare stă sus, sub header (11.11.2026): se vede imediat, lângă coșul spre care zboară produsul,
+   și nu acoperă butonul „Adaugă” al produsului următor sau bara de cumpărare de jos de pe pagina de produs */
+.toast { top: calc(56px + 8px); bottom: auto; animation: toast-down .34s var(--ease-out); }
+@keyframes toast-down { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+/* Etichetele de produs, pline (11.11.2026): cele cu contur alb se pierdeau la derulare. Cel mult două pe card.
+   Culori după roluri: prună pentru vânzări, magenta (terțiară) doar pentru „Nou”, lila deschis pentru prețul de volum,
+   negru pentru stoc; niciodată portocaliu (e al cumpărării și al căutării) */
+.flag--best { background: var(--secondary); color: #fff; box-shadow: none; }
+.flag--new { background: var(--tertiary); color: #fff; box-shadow: none; }
+.flag--low { background: var(--ink); color: #fff; box-shadow: none; }
+.flag--vol { background: var(--secondary-tint); color: var(--secondary-900); box-shadow: inset 0 0 0 1px var(--secondary-200); }
+/* Pe poză (carusele): stivuite sus în stânga, pe locul rezervat */
+.mbadges { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; flex-wrap: wrap; gap: 4px; pointer-events: none; }
+.mbadges .mbadge { position: static; }
+.be-c .card__img img { padding: 34px 10px 10px; }
+/* În listă (categorie, căutare): deasupra numelui, pe un rând */
+.card__tags { display: none; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.plp__grid .card__tags { display: flex; }
+.plp__grid .card__tags .card__tag { display: inline-flex; margin-bottom: 0; }
+.plp__grid .mbadges { display: none; }

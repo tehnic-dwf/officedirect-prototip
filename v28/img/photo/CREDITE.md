@@ -17,5 +17,6 @@ Toate fotografiile sunt gratuite, sub licențele [Pexels](https://www.pexels.com
 | bibliorafturi.webp (decupaj) | Prim ecran, varianta I | [Pexels 34293525](https://www.pexels.com/photo/colorful-office-binders-on-shelf-34293525/) | Zulfugar Karimov |
 | magazin.webp (decupaj) | Prim ecran, varianta K | [Pexels 33738528](https://www.pexels.com/photo/woman-reading-in-a-vibrant-office-supply-store-33738528/) | Andi sabandi |
 | birou-bibliorafturi.webp și birou-bibliorafturi-800.webp | Prim ecran, varianta S (hibridul) | [Pexels 17018372](https://www.pexels.com/photo/ring-binders-with-documents-on-desk-17018372/) | Jakub Zerdzicki |
+| ../g/double-a-2.webp (decupaj pătrat, 900 px) | Pagina de produs Double A, a doua poză (coala), marcată „Imagine ilustrativă” | [Pexels 9869063](https://www.pexels.com/photo/close-up-photo-of-a-bondpaper-9869063/) | Brando.ltd |
 
 Pentru publicare, OfficeDirect poate înlocui oricând aceste imagini cu fotografii proprii, din depozit sau de la clienți. Proporțiile din pagină rămân aceleași.

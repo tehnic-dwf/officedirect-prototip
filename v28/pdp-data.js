@@ -4,7 +4,7 @@
    nolocker: produsele voluminoase, la care site-ul nu oferă ridicare din easybox sau FANbox. */
 window.PDP_D = {
   "ik-eco": {"g": ["img/g/ik-eco-1.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "C"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "325081537"},
-  "double-a": {"g": ["img/g/double-a-1.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "A"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "307101208"},
+  "double-a": {"g": ["img/g/double-a-1.webp", "img/g/double-a-2.webp", "img/g/double-a-3.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "A"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "307101208"},
   "xerox-premier": {"g": ["img/g/xerox-premier-1.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "B"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "1500005"},
   "xerox-business": {"g": ["img/g/xerox-business-1.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "B"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "1500003"},
   "go-paper": {"g": ["img/g/go-paper-1.webp"], "s": [["Ambalare", "500 coli/top"], ["Clasa", "B"], ["Format", "A4"], ["Potrivită pentru", "Tipar alb-negru"]], "code": "313050834"},

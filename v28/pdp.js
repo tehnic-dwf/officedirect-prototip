@@ -102,29 +102,36 @@ const code = L.code || p.code;
 $('#pdp-code').textContent = code ? `Cod produs ${code}` : '';
 $('#pdp-code').hidden = !code;
 const seg = p.url.split('/');
+// Pe mobil, calea completă ocupa două rânduri deasupra pozei: păstrăm doar pasul înapoi, spre categoria produsului
 $('#crumbs').innerHTML = isPaper
-  ? '<li><a href="index.html">Acasă</a></li><li><a href="https://www.officedirect.ro/produse-din-hartie">Produse din hârtie</a></li><li><a href="categorie.html">Hârtie copiator</a></li>'
-  : `<li><a href="index.html">Acasă</a></li><li><a href="${SITE + seg[0] + '/' + seg[1]}">${esc(subOf(pid))}</a></li>`;
+  ? '<li><a class="crumbs__back" href="categorie.html"><i class="ph ph-caret-left" aria-hidden="true"></i>Hârtie copiator</a></li>'
+  : `<li><a class="crumbs__back" href="${SITE + seg[0] + '/' + seg[1]}"><i class="ph ph-caret-left" aria-hidden="true"></i>${esc(subOf(pid))}</a></li>`;
 
 /* ---------- Galerie ---------- */
 let color = null;
 const general = L.g && L.g.length ? L.g : [img(pid)];
 // La produsele cu culori, prima poză devine cea a culorii alese (M.064)
 const gallery = () => (color && L.c && L.c[color] ? [L.c[color], ...general] : general);
+// Fiecare poză răspunde unei întrebări: cum arată ambalajul, cum arată coala, ce primești (dimensiuni, coli, greutate).
+// Poza cu coala e ilustrativă (Pexels), până trimite OfficeDirect fotografii proprii; o spunem pe poză.
+const GAL_META = {
+  'img/g/double-a-2.webp': { alt: 'Coli de hârtie albă A4 scoase din top', note: 'Imagine ilustrativă' },
+  'img/g/double-a-3.webp': { alt: 'Ce primești într-un top: 500 de coli A4 de 210 × 297 mm, aproximativ 5 cm grosime și 2,5 kg' },
+};
 const galTrack = $('#gal-track');
 const dots = $('#gal-dots');
 function renderGallery() {
   const list = gallery();
   $('#gal').classList.toggle('is-multi', list.length > 1);
   galTrack.innerHTML = list.map((src, i) => `<li><button class="gal__slide" type="button" data-zoom="${i}" aria-label="Mărește poza ${i + 1} din ${list.length}">
-      <img src="${src}" alt="${i ? '' : esc(title)}" width="900" height="900" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}><i class="ph ph-magnifying-glass-plus gal__z" aria-hidden="true"></i></button></li>`).join('');
+      <img src="${src}" alt="${i ? esc(GAL_META[src]?.alt || '') : esc(title)}" width="900" height="900" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>${GAL_META[src]?.note ? `<span class="gal__note">${GAL_META[src].note}</span>` : ''}<i class="ph ph-magnifying-glass-plus gal__z" aria-hidden="true"></i></button></li>`).join('');
   dots.innerHTML = list.length > 1 ? list.map((_, i) => `<span${i ? '' : ' class="is-on"'}></span>`).join('') : '';
   galTrack.scrollLeft = 0;
 }
 const slideAt = () => { const first = galTrack.firstElementChild; return first ? Math.round(galTrack.scrollLeft / (first.getBoundingClientRect().width + 8)) : 0; };
 galTrack.addEventListener('scroll', () => requestAnimationFrame(() => { const i = slideAt(); $$('span', dots).forEach((d, k) => d.classList.toggle('is-on', k === i)); }), { passive: true });
 renderGallery();
-// „Cel mai vândut” / „Nou” stau pe rândul brandului, nu pe poză; reducerea și stocul sunt în preț și în blocul de livrare
+// „Top vânzări” / „Nou” stau pe rândul brandului, nu pe poză; reducerea și stocul sunt în preț și în blocul de livrare
 $('#pdp-brand').insertAdjacentHTML('afterend', flagHTML(p, false));
 
 /* ---------- Poza mare, cu trecere între poze ---------- */
@@ -134,7 +141,7 @@ function showViewer(i) {
   const list = gallery();
   vIndex = (i + list.length) % list.length;
   viewerImg.src = list[vIndex];
-  viewerImg.alt = title;
+  viewerImg.alt = vIndex ? (GAL_META[list[vIndex]]?.alt || title) : title;
   $('#viewer-stage').classList.remove('is-zoomed');
   $('#viewer-prev').hidden = $('#viewer-next').hidden = list.length < 2;
   $('#viewer-hint').textContent = list.length > 1 ? `${vIndex + 1} din ${list.length} · atinge ca să mărești` : 'Atinge poza ca s-o mărești';
@@ -224,9 +231,12 @@ function totalHTML() {
   const total = round2(qty * u);
   const saved = round2(qty * (base - u));
   const next = p.tiers?.find(([min]) => qty < min);
-  return `<p class="ptotal__sum"><span>${qty} × ${pLei(u)}</span><b>${lei(round2(qty * vatPrice(u)))}</b></p>
+  // La 1 bucată totalul repetă prețul de sus: arătăm doar cât mai e până la prețul de volum
+  const nextHTML = next ? `<button class="ptotal__next" type="button" data-tier="${next[0]}">Încă ${cate(next[0] - qty, many)} și plătești ${pLei(next[1])}/${one}<span>Pune ${next[0]} în coș: plătești cu ${lei(round2(next[0] * (vatPrice(u) - vatPrice(next[1]))))} mai puțin</span></button>` : '';
+  if (qty === 1) return nextHTML;
+  return `<div class="ptotal__box"><p class="ptotal__sum"><span>${qty} × ${pLei(u)}</span><b>${lei(round2(qty * vatPrice(u)))}</b></p>
     <p class="ptotal__sub">Total ${vatLabel()}${saved > 0 ? ` · <span class="ptotal__save">plătești cu ${lei(round2(qty * (vatPrice(base) - vatPrice(u))))} mai puțin la prețul de volum</span>` : ''}</p>
-    ${next ? `<button class="ptotal__next" type="button" data-tier="${next[0]}">Încă ${cate(next[0] - qty, many)} și plătești ${pLei(next[1])}/${one}<span>Pune ${next[0]} în coș: plătești cu ${lei(round2(next[0] * (vatPrice(u) - vatPrice(next[1]))))} mai puțin</span></button>` : ''}`;
+    </div>${nextHTML}`;
 }
 // Disponibilitatea stă lângă buton (obiectivul: „prețul, disponibilitatea și condițiile nu se ascund”); detaliile de livrare rămân mai jos
 function availHTML() {
@@ -333,13 +343,11 @@ function deliveryDate() {
 }
 function renderAssure() {
   const { total } = cartTotals();
-  const ship = total >= SHIP_RO ? 'Ai deja livrare gratuită în toată țara' : `Gratuită de la ${SHIP_RO} lei, ${SHIP_BUC} lei în București`;
   const stockRow = out ? null
     : p.avail === 'furnizor' ? ['ph-truck', 'Se aduce de la furnizor', 'Data de livrare o vezi înainte să plasezi comanda']
-    : ['ph-truck', `Ajunge până ${deliveryDate()}`, `${p.stock > 0 && p.stock <= LOW_STOCK ? `Ultimele ${p.stock} buc. în stoc. ` : p.avail === 'limitat' ? 'Stoc limitat. ' : ''}${ship}`];
+    : ['ph-truck', total >= SHIP_RO ? 'Ai livrare gratuită' : `Livrare gratuită de la ${SHIP_RO} lei`, `${total >= SHIP_RO ? 'În toată țara' : `${SHIP_BUC} lei în București`}${L.nolocker ? '' : ' · sau ridici din easybox, FANbox'}`];
   const items = [
     ...(stockRow ? [stockRow] : []),
-    ...(L.nolocker || out ? [] : [['ph-package', 'Poți ridica din easybox sau FANbox', '']]),
     ['ph-bank', 'Plătești prin OP, card sau ramburs', 'Factură pe CUI; ramburs fără taxă până la 5.000 lei'],
     ['ph-arrow-u-up-left', 'Retur în 30 de zile', 'Gratuit pentru coletele sub 10 kg'],
   ];

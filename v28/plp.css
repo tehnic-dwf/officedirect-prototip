@@ -174,3 +174,13 @@
 .qadd { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; }
 .qadd__n { width: 100%; height: 44px; padding: 0 6px; border: 1.5px solid var(--field); border-radius: var(--r-ctl); background: #fff; color: var(--ink); font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
 .qadd__n:focus { outline: 3px solid var(--secondary); outline-offset: 1px; border-color: var(--secondary); }
+
+/* Filtre cu mai puțin text (11.11.2026): descrierea scurtă stă pe același rând cu valoarea, în gri („70-80 g/mp · de birou”) */
+.frow__text small { display: inline; margin-top: 0; }
+.frow__text small::before { content: " · "; }
+
+/* Marcajele în listă (11.11.2026): deasupra numelui un singur marcaj (top vânzări, nou, ultimele bucăți);
+   prețul de volum nu se repetă ca etichetă, ci rândul „De la 50 de topuri: …” devine el însuși marcaj, lila */
+.plp__grid .card__tag.flag--vol { display: none; }
+.plp__grid .card__vol { display: inline-block; margin-top: 6px; padding: 3px 8px; border-radius: 6px; background: var(--secondary-tint); box-shadow: inset 0 0 0 1px var(--secondary-200); color: var(--secondary-900); }
+.plp__grid .card__vol b { color: var(--secondary-900); }
