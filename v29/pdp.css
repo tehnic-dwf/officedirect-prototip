@@ -1,0 +1,218 @@
+/* OfficeDirect · pagina de produs mobilă. Tokenurile și componentele vin din v28.css (DESIGN.md 7.8). */
+
+[data-page="pdp"] .hsearch { height: 0; }
+[data-page="pdp"] .hsearch:not(.is-open) .hsearch__in { display: none; }
+
+/* ---------- Galerie: poza următoare se vede pe margine ---------- */
+.gal { position: relative; margin-top: 8px; }
+.gal__track { display: flex; gap: 8px; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+.gal__track::-webkit-scrollbar { display: none; }
+.gal__track li { flex: 0 0 100%; scroll-snap-align: start; }
+.gal.is-multi .gal__track li { flex-basis: calc(100% - 40px); }
+.gal__slide { position: relative; display: block; width: 100%; height: clamp(228px, 66vw, 268px); padding: 0; border: 0; border-radius: var(--r-card); background: var(--photo); box-shadow: inset 0 0 0 1px var(--photo-edge); cursor: zoom-in; overflow: hidden; }
+.gal__slide img { width: 100%; height: 100%; object-fit: contain; padding: 14px; mix-blend-mode: multiply; transition: transform .5s var(--ease); }
+.gal__slide:active img { transform: scale(.98); }
+.gal__z { position: absolute; right: 10px; bottom: 10px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgb(255 255 255 / .92); color: var(--ink); font-size: 18px; box-shadow: 0 1px 2px rgb(42 22 64 / .12); pointer-events: none; }
+.gal__dots { display: flex; justify-content: center; gap: 6px; height: 6px; margin-top: 12px; }
+.gal__dots:empty { display: none; }
+.gal__dots span { width: 6px; height: 6px; border-radius: 999px; background: var(--line-2); transition: width .3s var(--ease-out), background-color .3s var(--ease); }
+.gal__dots span.is-on { width: 18px; background: var(--secondary); }
+
+/* ---------- Titlu ---------- */
+.pdp__body { padding: 0 var(--gutter); }
+.pdp__head { margin-top: 16px; }
+/* Ținta de 44 px fără să mute rândul: spațiu în plus în jur, compensat cu margini negative */
+.pdp__brand { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding-inline: 8px; margin: -8px -8px -8px -8px; font-size: 14px; font-weight: 600; color: var(--secondary); text-decoration: none; }
+.pdp__brand[hidden] { display: none; }
+.pdp__title { font-size: 22px; line-height: 1.25; font-weight: 650; letter-spacing: -.02em; text-wrap: pretty; }
+.pdp__code { margin-top: 4px; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* ---------- Buy box ---------- */
+.buy { margin-top: 14px; }
+.pprice .price { margin-top: 0; }
+.pprice .price__main { font-size: 30px; letter-spacing: -.03em; }
+.pprice .price__main small { font-size: 16px; }
+.pprice .price__old { font-size: 16px; }
+.pprice__sub { margin-top: 2px; font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pprice__sub b { font-weight: 650; color: var(--ink); }
+.pdp__head .card__flag { display: inline-flex; margin: 0 0 0 8px; vertical-align: middle; }
+.pprice__prev { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 15px; color: var(--ink-2); }
+.pprice__prev s { color: var(--ink-3); }
+.pprice__save { margin-top: 4px; font-size: 15px; font-weight: 600; color: var(--sale); }
+/* (rândurile cu etichete de mai jos nu se mai folosesc; reducerea e în varianta R6: preț anterior + economie, 03.11.2026)
+   Reducerea pe rânduri cu etichete (council 03.11.2026: Pr2): se vede ce înseamnă fiecare sumă, iar economia de volum
+   are eticheta ei separată, în total („cu prețul de volum”). Un singur termen: „preț anterior” (G-37, M.155, M.168) */
+.pprice__rows { display: grid; gap: 4px; margin: 10px 0 0; }
+.pprice__rows div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 15px; }
+.pprice__rows dt { color: var(--ink-2); }
+.pprice__rows dd { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pprice__rows s { font-weight: 400; color: var(--ink-3); }
+.pprice__rows .is-sale { color: var(--sale); }
+/* S5: „adică 3,40 lei / 100 coli” lipit de preț; reducerea într-un grup cu chenar fin, separat de prețul de volum */
+.pprice__unit { margin-top: 2px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pgroup { margin-top: 14px; padding: 10px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.pgroup__t { font-size: 14px; font-weight: 650; color: var(--sale); }
+.pgroup__line { margin-top: 2px; font-size: 15px; color: var(--ink-2); }
+.pgroup__line s { color: var(--ink-3); }
+.pgroup__line b { font-weight: 650; color: var(--sale); }
+.pprice__note { margin-top: 6px; font-size: 14px; line-height: 1.4; color: var(--ink-3); }
+
+/* Compatibilitate (toner, cilindru): înainte de cantitate și buton */
+.compat { margin-top: 16px; padding: 14px; border-radius: var(--r-ctl); background: var(--secondary-tint); }
+.compat__title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 650; color: var(--secondary-900); }
+.compat__title .ph { font-size: 20px; color: var(--secondary); }
+.compat__list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.compat__list li { padding: 4px 10px; border-radius: 999px; background: #fff; font-size: 14px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.compat__hint { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+
+.pcolors { margin: 16px 0 0; padding: 0; border: 0; }
+.pcolors legend { padding: 0; font-size: 15px; color: var(--ink-2); }
+.pcolors legend b { color: var(--ink); }
+.pcolors__list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; margin-left: -6px; }
+.pcolor { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }
+.pcolor input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pcolor span[aria-hidden] { width: 32px; height: 32px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .16); transition: box-shadow .2s var(--ease); }
+.pcolor input:checked + span { box-shadow: inset 0 0 0 1px rgb(0 0 0 / .16), 0 0 0 2px #fff, 0 0 0 4px var(--secondary); }
+.pcolor input:focus-visible + span { outline: 3px solid var(--secondary); outline-offset: 4px; }
+.pcolors__err { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--sale); }
+
+/* Prețurile de volum: fiecare prag e un buton; procentul arată cât scade prețul */
+/* Prețul de volum e un grup al lui, cu chenar fin și titlu: nu are roșu și nici preț tăiat, ca să nu se confunde cu reducerea (S5, council 03.11.2026) */
+.tiers { margin-top: 16px; padding: 10px 12px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.tiers__title { font-size: 15px; font-weight: 600; color: var(--ink); }
+.tiers__list { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+/* Toate chenarele au aceeași înălțime și aceleași trei rânduri (prag, preț, reducere), și primul, care nu are reducere */
+.tiers__list li { display: flex; }
+.tiers__list .tier { flex: 1; margin: 0; } /* .tier are margine de 24 px din tabelul de volum de pe prima pagină */
+.tier { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 100%; min-height: 60px; padding: 6px 2px; border: 0; border-radius: var(--r-ctl); background: #fff; box-shadow: inset 0 0 0 1.5px var(--line-2); color: var(--ink); cursor: pointer; transition: box-shadow .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease); }
+.tier:active { transform: scale(.97); }
+.tier.is-on { background: var(--secondary-tint); box-shadow: inset 0 0 0 2px var(--secondary); }
+.tier__q { font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.tier.is-on .tier__q { color: var(--secondary); font-weight: 600; }
+.tier__p { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tier__off { font-size: 13px; font-weight: 600; color: var(--green); }
+.tiers__list li:first-child .tier__off { color: var(--ink-3); font-weight: 500; }
+
+/* Cantitatea și butonul pe același rând, apoi totalul */
+.pbuy { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 10px; margin-top: 16px; }
+.pbuy .step { width: 100%; height: 52px; border-radius: var(--r-ctl); }
+.pbuy .step input { font-size: 17px; }
+.pbuy .btn { min-height: 52px; padding: 0 12px; }
+.ptotal { margin-top: 10px; padding: 12px 14px; border-radius: var(--r-ctl); background: var(--mist); }
+.ptotal__sum { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ptotal__sum b { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; }
+.ptotal__sub { margin-top: 2px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ptotal__save { color: var(--green); font-weight: 600; }
+.ptotal__next { display: block; width: 100%; margin-top: 10px; padding: 10px 12px; border: 0; border-radius: 10px; background: #fff; box-shadow: inset 0 0 0 1.5px var(--secondary-200); color: var(--secondary-900); font: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer; transition: transform .2s var(--ease), background-color .2s var(--ease); }
+.ptotal__next:active { transform: scale(.98); background: var(--secondary-tint); }
+.ptotal__next span { display: block; margin-top: 2px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+
+.pincart { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 10px; font-size: 15px; font-weight: 600; color: var(--green); }
+.pincart .ph { font-size: 20px; }
+.pincart a { display: inline-flex; align-items: center; min-height: 44px; margin-left: auto; color: var(--secondary); text-underline-offset: 3px; }
+
+.pout { margin-top: 16px; padding: 16px; border-radius: var(--r-ctl); background: var(--mist); }
+.pout__title { font-size: 17px; font-weight: 650; }
+.pout__text { margin: 4px 0 12px; font-size: 15px; color: var(--ink-2); }
+.pout .link { margin-top: 8px; }
+
+/* ---------- Livrare cu dată, plată, retur: un singur bloc sub buton ---------- */
+.assure { margin-top: 20px; border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--line); }
+.assure li + li { box-shadow: 0 -1px 0 var(--line); }
+.assure button { display: grid; grid-template-columns: 24px minmax(0, 1fr) 16px; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 10px 14px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.assure button:active { background: var(--mist); }
+.assure li:first-child button { border-radius: var(--r-card) var(--r-card) 0 0; }
+.assure li:last-child button { border-radius: 0 0 var(--r-card) var(--r-card); }
+.assure .ph:first-child { font-size: 22px; color: var(--secondary); }
+.assure .ph:last-child { font-size: 16px; color: var(--ink-3); }
+.assure b { display: block; font-size: 15px; font-weight: 600; }
+.assure b::first-letter { text-transform: uppercase; }
+.assure small { display: block; margin-top: 1px; font-size: 14px; line-height: 1.35; color: var(--ink-3); }
+
+/* ---------- Secțiuni ---------- */
+.pdp__sec { margin-top: 36px; }
+.pdp__h { font-size: 20px; line-height: 1.25; font-weight: 650; letter-spacing: -.015em; }
+.facts-list { display: grid; gap: 12px; margin-top: 14px; }
+.facts-list li { display: grid; grid-template-columns: 24px 1fr; gap: 10px; font-size: 15px; line-height: 1.45; text-wrap: pretty; }
+.facts-list .ph { display: grid; place-items: center; width: 22px; height: 22px; margin-top: 0; border-radius: 50%; background: var(--green-tint, #E7F5EC); color: var(--green); font-size: 14px; }
+.specs { margin-top: 14px; border-radius: var(--r-card); background: var(--mist); overflow: hidden; }
+.specs div { display: grid; grid-template-columns: 42% 1fr; gap: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.4; }
+.specs div:nth-child(even) { background: #fff; }
+.specs dt { color: var(--ink-2); }
+.specs dd { font-weight: 500; overflow-wrap: anywhere; }
+.desc { margin-top: 14px; display: grid; gap: 12px; font-size: 15px; line-height: 1.6; color: var(--ink-2); max-height: 9.6em; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent); mask-image: linear-gradient(180deg, #000 60%, transparent); }
+.desc.is-open { max-height: none; -webkit-mask-image: none; mask-image: none; }
+.desc p { max-width: 65ch; text-wrap: pretty; }
+.desc__more { margin-top: 4px; }
+.desc__more[hidden] { display: none; }
+
+/* Ajutor: aproape de decizie, cu butoane secundare (nu concurează cu „Adaugă în coș”) */
+.pdp__help { margin-top: 36px; padding: 18px 16px 16px; border-radius: var(--r-card); background: var(--mist); }
+.pdp__help-title { font-size: 17px; font-weight: 650; }
+.pdp__help-text { margin-top: 2px; font-size: 15px; color: var(--ink-2); }
+.pdp__help-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: 14px; }
+.pdp__help-actions .btn { min-height: 48px; background: #fff; }
+.pdp__rail { margin-top: var(--section); }
+.pdp__rail .rail { margin-top: 16px; }
+
+/* ---------- Bara fixă de cumpărare ---------- */
+.pdp-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 35; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -1px 0 var(--line), 0 -12px 24px -20px rgb(42 22 64 / .4); animation: bar-up .3s var(--ease-out); }
+@keyframes bar-up { from { transform: translateY(100%); } }
+.pdp-bar__price b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.pdp-bar__price span { font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.pdp-bar .btn { min-height: 48px; padding: 0 22px; }
+body.has-bar { padding-bottom: 76px; }
+body.has-bar .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
+
+/* ---------- Poza mărită ---------- */
+.viewer { position: fixed; inset: 0; z-index: 70; display: flex; flex-direction: column; background: #fff; }
+.viewer__close { position: absolute; top: calc(8px + env(safe-area-inset-top)); right: 8px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--mist); color: var(--ink); cursor: pointer; }
+.viewer__close .ph { font-size: 22px; }
+.viewer__stage { flex: 1; display: grid; place-items: center; overflow: auto; overscroll-behavior: contain; cursor: zoom-in; }
+.viewer__stage img { width: 100%; max-width: 900px; height: auto; mix-blend-mode: multiply; }
+.viewer__stage.is-zoomed { display: block; cursor: zoom-out; }
+.viewer__stage.is-zoomed img { width: 260%; max-width: none; }
+.viewer__foot { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; padding: 8px var(--gutter) calc(12px + env(safe-area-inset-bottom)); }
+.viewer__nav { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--mist); color: var(--ink); font-size: 20px; cursor: pointer; }
+.viewer__nav[hidden] { visibility: hidden; display: grid; }
+.viewer__hint { font-size: 14px; color: var(--ink-3); text-align: center; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 359px) {
+  .pdp__title { font-size: 20px; }
+  .tier__p { font-size: 14px; }
+  /* Cantitatea păstrează 3 × 44 px și la 320 px (M.148); butonul ia restul */
+  .pbuy { grid-template-columns: 132px minmax(0, 1fr); gap: 8px; }
+  .pbuy .btn { font-size: 15px; padding: 0 8px; }
+}
+
+/* Disponibilitatea, imediat deasupra butonului (10.11.2026) */
+.pavail { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
+.pavail .ph { flex: none; margin-top: 1px; font-size: 20px; color: var(--green); }
+.pavail b { color: var(--green); font-weight: 650; }
+.pavail--low b, .pavail--low .ph { color: var(--ink); }
+.pavail--wait b, .pavail--wait .ph { color: var(--ink); }
+
+
+/* Salvează în listă (10.11.2026): sub cumpărare, acțiune secundară */
+.psave { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; margin-top: 10px; border: 0; border-radius: var(--r-ctl); background: #fff; box-shadow: inset 0 0 0 1.5px var(--secondary); color: var(--secondary); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.psave .ph { font-size: 20px; }
+.psave[aria-pressed="true"] { background: var(--tertiary-tint); box-shadow: inset 0 0 0 1.5px var(--tertiary); color: var(--tertiary-ink); }
+
+/* Pagina de produs mai liniștită (11.11.2026): mai puține chenare și repetiții, aceeași informație */
+/* Drumul înapoi: un singur link, pe un rând */
+.pdp .crumbs li + li::before { display: none; }
+.crumbs__back { gap: 4px; font-weight: 600; }
+.crumbs__back .ph { font-size: 16px; }
+/* Pragurile de volum fără chenarul exterior: rămân doar cele patru căsuțe */
+.tiers { padding: 0; box-shadow: none; }
+/* Totalul apare doar de la 2 bucăți în sus; pasul spre prețul de volum e un link, nu o cutie în cutie */
+.ptotal { margin-top: 10px; padding: 0; background: none; }
+.ptotal__box { padding: 12px 14px; border-radius: var(--r-ctl); background: var(--mist); }
+.ptotal__box + .ptotal__next { margin-top: 8px; }
+.ptotal .ptotal__next { display: block; width: 100%; min-height: 44px; margin-top: 0; padding: 4px 0; border: 0; border-radius: 0; background: none; box-shadow: none; text-align: left; color: var(--secondary); font-size: 15px; font-weight: 600; text-decoration: none; }
+.ptotal .ptotal__next span { text-decoration: none; display: block; color: var(--ink-2); font-weight: 500; }
+/* Salvarea în listă: acțiune secundară, ca link cu inimă, nu un al doilea buton mare */
+.psave { width: auto; min-height: 44px; margin-top: 4px; padding: 0 2px; justify-content: flex-start; background: none; box-shadow: none; color: var(--secondary); font-weight: 600; }
+.psave[aria-pressed="true"] { background: none; box-shadow: none; color: var(--tertiary-ink); }
+/* Poza ilustrativă spune că e ilustrativă */
+.gal__note { position: absolute; left: 10px; bottom: 10px; padding: 3px 8px; border-radius: 6px; background: rgb(255 255 255 / .92); color: var(--ink-2); font-size: 13px; font-weight: 500; }

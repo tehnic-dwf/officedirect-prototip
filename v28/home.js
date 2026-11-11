@@ -55,7 +55,8 @@ if (HERO_V === 's' && document.documentElement.classList.contains('cs-sus')) {
   const rapid = document.createElement('a');
   rapid.className = 'hs-rapid';
   rapid.href = 'comanda-rapida.html';
-  rapid.dataset.firma = 'hp_comanda_rapida';
+  // Măsurarea lui proprie: atributul data-firma ar fi luat locul blocului „Pentru firme” în view_promotion / select_promotion
+  rapid.addEventListener('click', () => track('select_content', null, { content_type: 'comanda_rapida', content_id: 'hp_prim_ecran' }));
   rapid.innerHTML = '<span class="hs-rapid__ico"><i class="ph ph-lightning" aria-hidden="true"></i></span><span class="hs-rapid__t"><b>Ai codurile produselor?</b>Comandă rapidă după cod</span><span class="hs-rapid__go"><i class="ph ph-arrow-right" aria-hidden="true"></i></span>';
   document.querySelector('.hero--s .hb__search')?.replaceWith(rapid);
   old?.remove();
