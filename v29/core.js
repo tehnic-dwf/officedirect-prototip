@@ -740,36 +740,111 @@ let toastTimer;
 let toastY = null;   // poziția paginii când a apărut mesajul
 const toastEl = $('#toast');
 const armToast = () => { clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, 6000); };
-function showToast(html) {
-  toastEl.classList.remove('toast--note');
+function showToast(html, keep) {
+  toastEl.classList.remove('toast--note', 'tp', 'is-mini');
   toastEl.innerHTML = html;
   toastEl.hidden = false;
   toastY = scrollY;
   toastEl.style.animation = 'none'; void toastEl.offsetWidth; toastEl.style.animation = '';
-  armToast();
+  if (keep) clearTimeout(toastTimer); else armToast();
 }
 ['pointerenter', 'focusin', 'touchstart'].forEach(ev => toastEl.addEventListener(ev, () => clearTimeout(toastTimer), { passive: true }));
-['pointerleave', 'focusout'].forEach(ev => toastEl.addEventListener(ev, armToast));
-// Mesajul spune întâi ce s-a întâmplat („Adăugat în coș”), apoi ce și cât; bara arată cât mai e până la livrarea gratuită
-// (niciun concurent verificat pe 11.11.2026 nu arată progresul livrării gratuite la adăugare)
-function toast(id, color, q) {
-  const { total } = cartTotals();
+['pointerleave', 'focusout'].forEach(ev => toastEl.addEventListener(ev, () => { if (!toastEl.classList.contains('tp')) armToast(); }));
+
+/* ---------- Panoul de după adăugare (18.11.2026, cerut de Georgiana) ----------
+   Nu dispare singur: la derulare se strânge într-o bandă („3 produse în coș · 309 lei”), X îl închide, banda îl redeschide.
+   Recomandările țin de produsul adăugat:
+   1. prețul de volum al aceluiași produs (upsell), dacă are praguri și cantitatea e sub următorul prag;
+   2. produsele care se folosesc împreună cu el (COMPLEMENT: hârtie → capse, bandă adezivă; biblioraft → file de protecție);
+   3. completarea coșului până la livrarea gratuită, cu produse mici care încap în suma rămasă (FILLERS).
+   Fără produse deja în coș, epuizate sau cu culori de ales (alegerea culorii ar deschide altă foaie). */
+let toastId = null, toastColor = null;
+const TP_LIST = { list: 'adaugare_recomandari', listName: 'Adăugare în coș - recomandări' };
+function recsFor(id) {
+  const { total, byId } = cartTotals();
+  const left = total < SHIP_BUC ? SHIP_BUC - total : total < SHIP_RO ? SHIP_RO - total : 0;
+  const ok = x => P[x] && x !== id && !byId[x] && !P[x].colors && P[x].stock !== 0;
+  const comp = (COMPLEMENT[id] || []).filter(ok);
+  const fits = x => left && P[x].price <= left ? 0 : 1;
+  const fill = FILLERS.filter(ok).sort((a, b) => fits(a) - fits(b));
+  const ids = [...new Set([...comp, ...fill])].slice(0, 3);
+  // Titlul spune exact ce e în listă: „Se folosesc împreună” doar când toate sunt complementare; fără afirmații nemăsurate
+  const allComp = ids.length && ids.every(x => comp.includes(x));
+  return { ids, title: allComp ? 'Se folosesc împreună' : left ? 'Completează până la livrare gratuită' : 'Completează comanda' };
+}
+function upsellHTML(id) {
+  const p = P[id];
+  if (!p.tiers || p.colors) return '';
+  const q = qtyOf(id);
+  const next = p.tiers.find(([min]) => q < min);
+  if (!next) return '';
+  const [one, many] = unitWord(p);
+  const save = round2(next[0] * (vatPrice(unitPrice(id, q)) - vatPrice(next[1])));
+  return `<button class="tp__up" type="button" data-toast-up="${id}|${next[0]}"><i class="ph ph-stack" aria-hidden="true"></i><span><b>Ia ${cate(next[0], many)}: ${pLei(next[1])}/${one}</b>Economisești ${lei(save)}</span></button>`;
+}
+function renderToastPanel(fresh) {
+  const id = toastId, p = P[id];
+  if (!p) return;
+  const { total, count } = cartTotals();
   const m = shipMessage(total);
   const goal = total < SHIP_BUC ? SHIP_BUC : SHIP_RO;
-  const pct = Math.min(100, Math.round(total / goal * 100));
-  showToast(`<img src="${img(id)}" alt="" width="44" height="44">
-    <p class="toast__name"><span class="toast__ok"><i class="ph ph-check-circle" aria-hidden="true"></i>Adăugat în coș</span><span class="toast__item">${q > 1 ? `${q} × ` : ''}${esc(P[id].name)}${color ? `, ${color}` : ''}</span></p>
-    <a href="#" data-open="sheet-cos">Vezi coșul</a>
-    <div class="toast__ship"><span class="toast__bar" aria-hidden="true"><i style="width:${m.done ? 100 : pct}%"></i></span><p class="toast__msg">${m.short}</p></div>`);
+  const pct = m.done ? 100 : Math.min(100, Math.round(total / goal * 100));
+  const r = recsFor(id);
+  const n = qtyOf(id);
+  const mini = !fresh && toastEl.classList.contains('is-mini');
+  const html = `<div class="tp__full">
+      <div class="tp__head">
+        <img src="${img(id)}" alt="" width="44" height="44">
+        <p class="tp__t"><span class="toast__ok"><i class="ph ph-check-circle" aria-hidden="true"></i>Adăugat în coș</span><span class="tp__item">${n > 1 ? `${n} × ` : ''}${esc(p.name)}${toastColor ? `, ${esc(toastColor)}` : ''}</span></p>
+        <a class="tp__cta" href="#" data-open="sheet-cos">Vezi coșul</a>
+        <button class="tp__x" type="button" data-toast-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="toast__ship"><span class="toast__bar" aria-hidden="true"><i style="width:${pct}%"></i></span><p class="toast__msg">${m.short}</p></div>
+      ${upsellHTML(id)}
+      ${r.ids.length ? `<p class="tp__h">${r.title}</p>
+      <ul class="tp__recs" data-list="${TP_LIST.list}" data-list-name="${TP_LIST.listName}">${r.ids.map((x, i) => `<li data-card="${x}" data-index="${i + 1}">
+        <a class="tp__img" href="${pdpHref(x)}" data-select="${x}" tabindex="-1" aria-hidden="true"><img src="${img(x)}" alt="" width="64" height="64" loading="lazy"></a>
+        <a class="tp__n" href="${pdpHref(x)}" data-select="${x}">${esc(P[x].cardName || P[x].name)}</a>
+        <span class="tp__p">${pLei(P[x].price)}</span>
+        <button class="tp__add" type="button" data-add="${x}" aria-label="Adaugă în coș: ${esc(P[x].name)}"><i class="ph ph-plus" aria-hidden="true"></i>Adaugă</button>
+      </li>`).join('')}</ul>` : ''}
+    </div>
+    <div class="tp__mini">
+      <button class="tp__expand" type="button" data-toast-expand aria-label="Arată ce ai adăugat și recomandările"><i class="ph ph-check-circle" aria-hidden="true"></i><span><b>${cate(count, count === 1 ? 'produs' : 'produse')}</b> · ${lei(total)}</span><i class="ph ph-caret-down" aria-hidden="true"></i></button>
+      <a class="tp__cta" href="#" data-open="sheet-cos">Vezi coșul</a>
+      <button class="tp__x" type="button" data-toast-close aria-label="Închide"><i class="ph ph-x" aria-hidden="true"></i></button>
+    </div>`;
+  if (fresh) showToast(html, true); else toastEl.innerHTML = html;
+  toastEl.classList.add('tp');
+  toastEl.classList.toggle('is-mini', mini);
+  if (fresh && r.ids.length) track('view_item_list', { item_list_id: TP_LIST.list, item_list_name: TP_LIST.listName, items: r.ids.map((x, i) => gaItem(x, { ...TP_LIST, index: i + 1 })) });
 }
+// Mesajul spune întâi ce s-a întâmplat („Adăugat în coș”), apoi ce și cât; bara arată cât mai e până la livrarea gratuită
+function toast(id, color) {
+  toastId = id; toastColor = color || null;
+  renderToastPanel(true);
+}
+// Cât timp panoul e deschis, urmează coșul (prețul de volum ales, alte produse adăugate)
+hooks.cart.push(() => { if (!toastEl.hidden && toastEl.classList.contains('tp')) renderToastPanel(false); });
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-toast-close]')) { hideToast(); track('select_content', null, { content_type: 'panou_adaugare', content_id: 'inchide' }); return; }
+  if (e.target.closest('[data-toast-expand]')) { toastEl.classList.remove('is-mini'); toastY = scrollY; return; }
+  const up = e.target.closest('[data-toast-up]');
+  if (up) {
+    const [id, n] = up.dataset.toastUp.split('|');
+    track('tier_select', null, { item_id: id, threshold: Number(n), item_list_id: 'panou_adaugare', source: 'upsell' });
+    setQty(id, Number(n), up, { ctx: TP_LIST });
+  }
+});
 function note(text) { announce(text); showToast(`<i class="ph ph-info" aria-hidden="true" style="font-size:24px;color:#fff;justify-self:center"></i><p class="toast__msg" style="grid-area:name">${text}</p>`); toastEl.classList.add('toast--note'); }
-function hideToast() { toastEl.hidden = true; }
-// Mesajul stă sus, sub header (11.11.2026): nu mai acoperă butoanele de dedesubt; dispare după ce derulezi
-// cam o jumătate de ecran, ca să nu rămână peste filtre cât cauți mai departe
+function hideToast() { toastEl.hidden = true; toastEl.classList.remove('tp', 'is-mini'); }
+// Panoul nu dispare la derulare: după ~60 px se strânge într-o bandă subțire; mesajele simple (note) dispar după o jumătate de ecran
 addEventListener('scroll', () => {
-  if (toastEl.hidden || !['plp', 'serp', 'home'].includes(document.body.dataset.page)) { toastY = null; return; }
+  if (toastEl.hidden) { toastY = null; return; }
   if (toastY === null) toastY = scrollY;
-  else if (Math.abs(scrollY - toastY) > 320) { hideToast(); toastY = null; }
+  const d = Math.abs(scrollY - toastY);
+  if (toastEl.classList.contains('tp')) { if (d > 60) toastEl.classList.add('is-mini'); }
+  else if (d > 320) { hideToast(); toastY = null; }
 }, { passive: true });
 
 /* ---------- Alegerea culorii (M.029, PLP-28) ---------- */
