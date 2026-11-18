@@ -1,0 +1,164 @@
+/* OfficeDirect · comandă rapidă după cod (v28). Culori pe roluri: portocaliu doar pe „Adaugă în coș” și „Vezi coșul”;
+   mov pentru acțiunile secundare; roșu doar pentru rândurile care nu intră în coș. */
+.qo { padding-bottom: 120px; }
+.qo__head { padding: 4px var(--gutter) 0; }
+.qo__lead { margin-top: 8px; max-width: 36ch; font-size: 16px; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
+
+.qo__tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 20px var(--gutter) 0; padding: 4px; border-radius: 14px; background: var(--mist); }
+.qo__tabs button { min-height: 44px; border: 0; border-radius: 10px; background: none; color: var(--ink-2); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.qo__tabs button[aria-selected="true"] { background: #fff; color: var(--ink); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line); }
+
+.qo__panel { padding: 20px var(--gutter) 0; }
+.qo__label { display: block; margin-bottom: 8px; font-size: 15px; font-weight: 600; color: var(--ink); }
+.qo__text { display: block; width: 100%; min-height: 168px; padding: 14px; border: 1.5px solid var(--field); border-radius: var(--r-ctl); background: #fff; color: var(--ink);
+  font: 16px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; resize: vertical; }
+.qo__text:focus { outline: 3px solid var(--secondary); outline-offset: 2px; border-color: var(--secondary); }
+.qo__text::placeholder { color: var(--ink-3); }
+.qo__help { margin: 8px 0 16px; font-size: 14px; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
+.qo__alt { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 20px; margin-top: 6px; }
+.qo__alt .text-btn { min-height: 44px; display: inline-flex; align-items: center; }
+.qo__file { position: relative; cursor: pointer; }
+.qo__file input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.qo__file:focus-within { outline: 2px solid var(--secondary); outline-offset: 2px; border-radius: 6px; }
+.qo__note { margin-bottom: 14px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+
+.qo__past { display: grid; gap: 12px; }
+.qo__order { padding: 16px; border-radius: var(--r-card); background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.qo__order-t { font-size: 16px; font-weight: 650; }
+.qo__order-m { margin-top: 2px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qo__thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 14px; }
+.qo__thumbs li { position: relative; }
+.qo__thumbs img { display: block; width: 44px; height: 44px; padding: 3px; border-radius: 10px; background: var(--photo); box-shadow: inset 0 0 0 1px var(--photo-edge); object-fit: contain; }
+.qo__thumbs span { position: absolute; right: -4px; bottom: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--secondary-900); color: #fff; font-size: 12px; font-weight: 650; line-height: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Lista verificată */
+.qo__res { margin-top: 32px; padding: 0 var(--gutter); scroll-margin-top: 72px; outline: none; }
+.qo__res-head { display: grid; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.qo__sum { display: flex; flex-wrap: wrap; gap: 6px; }
+.qo__pill { display: inline-flex; align-items: center; gap: 4px; min-height: 28px; padding: 0 10px; border-radius: 999px; background: var(--mist); font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.qo__pill.is-ok { background: #E9F5EE; color: var(--green); }
+.qo__pill.is-todo { background: var(--sale-tint); color: var(--sale); }
+
+.qo__row { display: grid; grid-template-columns: 56px minmax(0, 1fr) 44px; grid-template-areas: "img info del" "buy buy buy" "extra extra extra"; column-gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.qo__img { grid-area: img; width: 56px; height: 56px; padding: 4px; border-radius: 12px; background: var(--photo); box-shadow: inset 0 0 0 1px var(--photo-edge); object-fit: contain; }
+.qo__img--empty { display: grid; place-items: center; background: var(--sale-tint); box-shadow: none; color: var(--sale); font-size: 24px; }
+.qo__info { grid-area: info; min-width: 0; align-self: center; }
+.qo__name { display: flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+a.qo__name:hover { text-decoration: underline; }
+.qo__meta { margin-top: 2px; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qo__del { grid-area: del; align-self: start; margin-top: -6px; }
+.qo__buy { grid-area: buy; display: grid; grid-template-columns: 148px 1fr; align-items: center; gap: 12px; margin-top: 12px; }
+.qo__buy .step { animation: none; }
+.qo__buy .step input { width: 100%; height: 44px; border: 0; background: none; text-align: center; font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.qo__buy .step button:disabled { color: var(--ink-3); opacity: .5; cursor: default; }
+.qo__line { display: grid; justify-items: end; font-variant-numeric: tabular-nums; }
+.qo__line b { font-size: 17px; font-weight: 650; }
+.qo__line small { font-size: 13px; color: var(--ink-2); }
+.qo__extra { grid-area: extra; }
+.qo__extra:empty { display: none; }
+.qo__tier { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; color: var(--secondary); }
+.qo__tier.is-on { color: var(--green); }
+.qo__err { margin-top: 10px; font-size: 14px; line-height: 1.45; color: var(--sale); }
+.qo__err--soft { color: var(--ink-2); }
+.qo__err b { font-variant-numeric: tabular-nums; }
+.qo__fix { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 10px; }
+.qo__fix .btn, .qo__more .btn { min-height: 52px; }
+.qo__select { width: 100%; height: 52px; padding: 0 12px; border: 1.5px solid var(--field); border-radius: var(--r-ctl); background: #fff; font: inherit; font-size: 16px; color: var(--ink); }
+.qo__row.is-color .qo__label { margin-top: 12px; }
+.qo__pick { margin-top: 12px; border: 0; padding: 0; }
+.qo__pick legend { margin-bottom: 8px; font-size: 14px; line-height: 1.45; color: var(--ink); font-weight: 600; }
+.qo__opt { display: grid; grid-template-columns: 20px 40px 1fr; align-items: center; gap: 10px; min-height: 56px; padding: 6px 10px; margin-top: 6px; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 14px; line-height: 1.3; cursor: pointer; }
+.qo__opt:has(input:checked) { box-shadow: inset 0 0 0 2px var(--secondary); background: var(--secondary-tint); }
+.qo__opt input { width: 20px; height: 20px; accent-color: var(--secondary); }
+.qo__opt img { width: 40px; height: 40px; object-fit: contain; }
+.qo__opt small { display: block; color: var(--ink-2); font-size: 13px; }
+.qo__pick--set { display: grid; gap: 8px; }
+.qo__pick--set .btn { min-height: 48px; font-size: 15px; }
+
+.qo__more { margin-top: 20px; }
+.qo__more-row { display: grid; grid-template-columns: minmax(0, 1fr) 64px auto; gap: 8px; }
+.qo__more-q { text-align: center; }
+
+/* După adăugare */
+.qo__done { margin: 24px var(--gutter) 0; outline: none; scroll-margin-top: 72px; }
+.qo__ok { display: grid; justify-items: center; gap: 6px; padding: 24px 18px 12px; border-radius: var(--r-lg); background: #E9F5EE; text-align: center; }
+.qo__ok > .ph { font-size: 40px; color: var(--green); }
+.qo__ok p { font-size: 15px; line-height: 1.45; color: var(--ink-2); max-width: 32ch; }
+.qo__ok .qo__thumbs { justify-content: center; margin: 8px 0 12px; }
+.qo__ok .btn { margin-top: 4px; }
+.qo__ok .text-btn { min-height: 44px; }
+.qo__left { margin-top: 16px; font-size: 15px; color: var(--ink-2); }
+
+/* Bara de jos */
+.qo__bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -1px 0 var(--line), 0 -12px 24px -18px rgb(42 22 64 / .35); }
+.qo__bar-t { display: grid; font-size: 14px; line-height: 1.3; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qo__bar-t b { font-size: 18px; color: var(--ink); }
+.qo__bar .btn { min-height: 52px; padding: 0 18px; white-space: nowrap; }
+.qo__bar .btn:disabled { background: var(--mist); color: var(--ink-3); cursor: not-allowed; }
+.toast { bottom: calc(92px + env(safe-area-inset-bottom)); }
+
+@media (max-width: 340px) {
+  .qo__buy { grid-template-columns: 132px 1fr; }
+  .qo__more-row { grid-template-columns: minmax(0, 1fr) 56px; }
+  .qo__more-row .btn { grid-column: 1 / -1; }
+  .qo__bar .btn { padding: 0 14px; }
+}
+
+/* După council (05.11.2026): rândurile cu probleme se văd ca problemă; bara pe două rânduri clare */
+.qo__row.is-format, .qo__row.is-missing, .qo__row.is-pick, .qo__row.is-color, .qo__row.is-set { margin: 8px calc(-1 * var(--gutter) + 8px) 0; padding: 14px 12px; border: 0; border-left: 3px solid var(--sale); border-radius: 0 var(--r-card) var(--r-card) 0; background: var(--sale-tint); }
+.qo__row.is-stock { opacity: .85; }
+.qo__label--need { color: var(--sale); }
+.qo__wait { display: inline-flex; align-items: center; gap: 4px; color: var(--sale) !important; font-weight: 600; }
+.qo__units { margin-top: -2px; font-size: 14px !important; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qo__bar-t b { font-size: 20px; font-weight: 700; }
+.qo__bar-t b small { font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.qo__bar-t span { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.qo__bar-t em { font-style: normal; min-height: 24px; font-size: 13px; }
+.qo__ok .qo__thumbs { display: grid; grid-template-columns: repeat(6, 44px); }
+.qo__alt { gap: 8px; }
+.qo__alt .text-btn { flex: 1 1 140px; justify-content: center; padding: 0 12px; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1.5px var(--secondary); background-image: none; text-decoration: none; font-weight: 600; }
+
+/* Un singur câmp pe pagină (10.11.2026): bara de căutare a site-ului semăna cu câmpul de coduri, chiar deasupra lui.
+   Căutarea rămâne la iconița din header și se deschide la fel ca pe celelalte pagini. */
+body[data-page="rapid"] .hsearch:not(.is-open) { height: 0; overflow: hidden; }
+
+/* ---------- Listele mele (10.11.2026) ---------- */
+.ls { padding-bottom: 48px; }
+.ls__new { margin: 20px var(--gutter) 0; }
+.ls__list { margin: 16px var(--gutter) 0; padding: 18px 16px 8px; border-radius: var(--r-card); background: #fff; box-shadow: inset 0 0 0 1px var(--line); scroll-margin-top: 72px; }
+.ls__name { font-size: 19px; font-weight: 650; letter-spacing: -.01em; }
+.ls__meta { margin-top: 2px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ls__thumbs { margin: 12px 0 14px; }
+.ls__more { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; background: var(--mist); font-size: 13px; font-weight: 650; color: var(--ink-2); }
+.ls__actions { display: flex; flex-wrap: wrap; gap: 0 18px; margin-top: 6px; }
+.ls__actions .text-btn { min-height: 44px; display: inline-flex; align-items: center; font-size: 15px; }
+.ls__danger { color: var(--sale) !important; }
+.ls__confirm { display: inline-flex; gap: 0 16px; }
+.ls__rename { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.ls__rename .btn { min-height: 52px; }
+.ls__items { margin-top: 6px; border-top: 1px solid var(--line); }
+.ls__item { display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; grid-template-areas: "img name del" "img step step"; column-gap: 12px; row-gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ls__item:last-child { border-bottom: 0; }
+.ls__item img { grid-area: img; width: 48px; height: 48px; object-fit: contain; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--photo-edge); }
+.ls__item p { grid-area: name; font-size: 15px; font-weight: 600; line-height: 1.3; }
+.ls__item p a { display: flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: none; }
+.ls__item small { display: block; font-size: 13px; font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ls__del { grid-area: del; color: var(--ink-3); }
+.ls__step { grid-area: step; width: 140px; animation: none; }
+.ls__step input { width: 100%; height: 44px; border: 0; background: none; text-align: center; font: inherit; font-size: 16px; font-weight: 600; }
+.ls__step button:disabled { opacity: .45; }
+.ls__empty { margin: 20px var(--gutter) 0; padding: 22px 18px 10px; border-radius: var(--r-lg); background: var(--secondary-tint); }
+.ls__steps { display: grid; gap: 14px; margin: 16px 0 20px; }
+.ls__steps li { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.ls__steps b { color: var(--ink); }
+.ls__steps .ph { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #fff; color: var(--secondary); font-size: 20px; }
+
+/* Comanda rapidă și listele (10.11.2026) */
+.qo__sec { margin: 18px 0 8px; font-size: 16px; }
+.qo__sec:first-of-type { margin-top: 4px; }
+.qo__nolists { padding: 14px 16px; border-radius: var(--r-card); background: var(--secondary-tint); font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.qo__nolists a { color: var(--secondary); font-weight: 600; }
+.qo__savelist { width: 100%; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(29 122 75 / .2); text-align: left; }
+.qo__saved { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; font-size: 15px; color: var(--green); font-weight: 600; outline: none; }
+.qo__saved a { color: var(--secondary); }
